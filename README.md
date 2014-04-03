@@ -11,7 +11,7 @@ This has multiple uses, including:
 * Connecting more devices on a single application than the SDK currently allows
 * Sharing a Kinect for testing purposes
 
-You'll need a [RabbitMQ server](rabbitmq.com).
+You'll need a [RabbitMQ server](http://rabbitmq.com).
 
 _Warning: This is based on preliminary software and/or hardware, subject to change._
 
