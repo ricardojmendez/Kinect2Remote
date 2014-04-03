@@ -23,7 +23,7 @@ The following libraries are included:
 
 * Arges.KinectRemote.Sensor: handles communication with the Kinect device.
 * Arges.KinectRemote.Data: types used to encapsulate the Kinect data.
-* Arges.KnectRemove.Transport: encapsulates the RabbitMQ transport functions.
+* Arges.KinectRemote.Transport: encapsulates the RabbitMQ transport functions.
 
 It also includes two test applications:
 
@@ -41,7 +41,6 @@ It also includes two test applications:
 ## TODO
 
 * Custom consumer which only keeps the latest frame - chances are we don't care about any of the intermediate ones since we last processed them.
-* Non-blocking Dequeueing for Unity and other game engines.
 * Configure TTL for queues, we don't want outdated frames.
 
 (To be expanded)

@@ -55,5 +55,26 @@ namespace Arges.KinectRemote.Transport
             }
             return data;
         }
+
+        /// <summary>
+        /// Returns a body bag if the body is ready, or null if otherwise.
+        /// </summary>
+        /// <returns>KinectBodyBag with the received data, or null.</returns>
+        public KinectBodyBag DequeueNoWait()
+        {
+            KinectBodyBag data = null;
+
+            var msg = (BasicDeliverEventArgs)Consumer.Queue.DequeueNoWait(null);
+            if (msg != null && msg.Body != null)
+            {
+                using (var ms = new MemoryStream(msg.Body))
+                {
+                    data = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
+                }
+
+            }
+
+            return data;
+        }
     }
 }

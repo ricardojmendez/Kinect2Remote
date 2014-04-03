@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define NoWait
+using System;
 using System.Configuration;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
@@ -37,8 +38,19 @@ namespace Arges.KinectRemote.TestConsole
                 {
                     while (true)
                     {
+#if NoWait
+                        // Non-blocking, will return null if there isn't any data available
+                        var kinectData = receiver.DequeueNoWait();
+                        if (kinectData != null)
+                        {
+                            LogKinectData(kinectData);
+                        }
+                        System.Threading.Thread.Sleep(1);
+#else
+                        // Blocking call
                         var kinectData = receiver.Dequeue();
                         LogKinectData(kinectData);
+#endif
                     }
 
                 }
