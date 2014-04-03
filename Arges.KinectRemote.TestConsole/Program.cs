@@ -1,30 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Configuration;
 using Arges.KinectRemote.Data;
-using ProtoBuf;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
+using Arges.KinectRemote.Transport;
 
 
 namespace Arges.KinectRemote.TestConsole
 {
-    class Program{
-
+    class Program
+    {
         private static string _exchange;
         private static string _ipAddress;
 
-        private static void ReadConfigSettings(){
+        private static void ReadConfigSettings()
+        {
             _exchange = ConfigurationManager.AppSettings["exchange"].Trim();
             _ipAddress = ConfigurationManager.AppSettings["ipAddress"].Trim();
-            if(string.IsNullOrEmpty(_exchange)){
+            if(string.IsNullOrEmpty(_exchange))
+            {
                 throw new System.Exception("Exchange is not specified in the app.config.");
             }
-            if (string.IsNullOrEmpty(_ipAddress)){
+            if (string.IsNullOrEmpty(_ipAddress))
+            {
                 throw new System.Exception("IP Address is not specified in the app.config.");
             }
             Console.WriteLine(string.Format("Exchange is: {0}", _exchange));
@@ -34,38 +30,21 @@ namespace Arges.KinectRemote.TestConsole
         static void Main(string[] args)
         {
             ReadConfigSettings();
+            
             try
             {
-                var factory = new ConnectionFactory() { HostName = _ipAddress };
-                using (var connection = factory.CreateConnection())
+                using (var receiver = new KinectBodyReceiver(_ipAddress, _exchange))
                 {
-                    using (var channel = connection.CreateModel())
+                    while (true)
                     {
-                        channel.ExchangeDeclare(_exchange, "fanout");
-                        var queue = channel.QueueDeclare();
-                        channel.QueueBind(queue, _exchange, "");
-
-                        var consumer = new QueueingBasicConsumer(channel);
-                        channel.BasicConsume(queue, true, consumer); 
-
-                        Console.WriteLine("Initialized consumer for {0} on address {1}", _exchange, _ipAddress);
-
-                        while (true)
-                        {
-                            var msg = (BasicDeliverEventArgs)consumer.Queue.Dequeue();
-                            var body = msg.Body;
-
-                            using (var ms = new MemoryStream(body))
-                            { 
-                                var kinectData = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
-
-                                LogKinectData(kinectData);
-                            }
-                        }
+                        var kinectData = receiver.Dequeue();
+                        LogKinectData(kinectData);
                     }
+
                 }
             }
-            catch(System.Exception ex){
+            catch(System.Exception ex)
+            {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
                 Console.ResetColor();

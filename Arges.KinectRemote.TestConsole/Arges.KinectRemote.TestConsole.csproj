@@ -70,6 +70,10 @@
       <Project>{a6328550-5ae7-44df-932d-e46f7f177fc5}</Project>
       <Name>Arges.KinectRemote.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Arges.KinectRemote.Transport\Arges.KinectRemote.Transport.csproj">
+      <Project>{7add864f-efdb-4d34-b39b-29dd5204b7ed}</Project>
+      <Name>Arges.KinectRemote.Transport</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
