@@ -1,4 +1,5 @@
 ﻿#define NoWait
+#define OnlyLast
 using System;
 using System.Configuration;
 using Arges.KinectRemote.Data;
@@ -34,7 +35,11 @@ namespace Arges.KinectRemote.TestConsole
             
             try
             {
+#if OnlyLast
+                using (var receiver = new KinectBodyReceiverLastOnly(_ipAddress, _exchange))
+#else
                 using (var receiver = new KinectBodyReceiver(_ipAddress, _exchange))
+#endif
                 {
                     while (true)
                     {
@@ -52,7 +57,6 @@ namespace Arges.KinectRemote.TestConsole
                         LogKinectData(kinectData);
 #endif
                     }
-
                 }
             }
             catch(System.Exception ex)

@@ -8,17 +8,18 @@ using RabbitMQ.Client.Events;
 namespace Arges.KinectRemote.Transport
 {
     /// <summary>
-    /// Handles reception of KinectBodyBags via RabbitMQ.
+    /// Handles reception of KinectBodyBags via RabbitMQ. Will process only the last message received.
     /// </summary>
     /// <seealso cref="Arges.KinectRemote.Data.KinectBodyBag"/>
-    public class KinectBodyReceiver: IDisposable
+    /// <seealso cref="Arges.KinectRemote.Transport.KinectBodyReceiver"/>
+    public class KinectBodyReceiverLastOnly : IDisposable
     {
         IConnection _connection;
         IModel _channel;
 
-        public QueueingBasicConsumer Consumer { get; private set; }
+        public KeepLastOnlyConsumer Consumer { get; private set; }
 
-        public KinectBodyReceiver(string ipAddress, string exchange)
+        public KinectBodyReceiverLastOnly(string ipAddress, string exchange)
         {
             var factory = new ConnectionFactory() { HostName = ipAddress };
             _connection = factory.CreateConnection();
@@ -26,13 +27,12 @@ namespace Arges.KinectRemote.Transport
             _channel.ExchangeDeclare(exchange, "fanout");
 
             // Setting up the ttl to 30ms, since we don't particularly care about outdated frames.
-            var queueParams = new Dictionary<string, object>() { {"x-message-ttl", 30} };
+            var queueParams = new Dictionary<string, object>() { { "x-message-ttl", 30 } };
             var queue = _channel.QueueDeclare("", false, true, true, queueParams);
             _channel.QueueBind(queue, exchange, "");
 
-            Consumer = new QueueingBasicConsumer(_channel);
+            Consumer = new KeepLastOnlyConsumer(_channel);
             _channel.BasicConsume(queue, true, Consumer);
-
         }
 
         public void Dispose()
@@ -48,13 +48,21 @@ namespace Arges.KinectRemote.Transport
         /// <returns>KinectBodyBag with the received data.</returns>
         public KinectBodyBag Dequeue()
         {
-            var msg = (BasicDeliverEventArgs)Consumer.Queue.Dequeue();
-            var body = msg.Body;
-
-            KinectBodyBag data;
-            using (var ms = new MemoryStream(body))
+            KinectBodyBag data = null;
+            while (data == null)
             {
-                data = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
+                var msg = Consumer.Pop();
+                if (msg != null)
+                {
+                    using (var ms = new MemoryStream(msg.Body))
+                    {
+                        data = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
+                    }
+                }
+                else
+                {
+                    System.Threading.Thread.Sleep(1);
+                }
             }
             return data;
         }
@@ -67,7 +75,7 @@ namespace Arges.KinectRemote.Transport
         {
             KinectBodyBag data = null;
 
-            var msg = (BasicDeliverEventArgs)Consumer.Queue.DequeueNoWait(null);
+            var msg = Consumer.Pop();
             if (msg != null && msg.Body != null)
             {
                 using (var ms = new MemoryStream(msg.Body))

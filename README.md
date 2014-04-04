@@ -38,10 +38,10 @@ It also includes two test applications:
 * The producer will send all available body information for all connected sensors to the same exchange. The sensor ID is encoded on the information sent.
 * The current Dequeue method is a blocking call.  Do not use it from an Update method on a Unity application, use DequeueNoWait instead.
 * Messages on the consumer queues have a TTL of 30ms, since we don't really care about outdated frames. We could expose this as a parameter, but I'm not complicating things right now.
+* KeepLastOnlyConsumer is a custom subclass of DefaultBasicConsumer which does not keep a queue, but instead stores only the last message received.
 
 ## TODO
 
-* Custom consumer which only keeps the latest frame - chances are we don't care about any of the intermediate ones since we last processed them.
-
+* Consider if keeping KinectBodyReceiver and KinectBodyReceiverLastOnly separate or if to integrate them.
 
 (To be expanded)
