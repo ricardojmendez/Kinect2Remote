@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using Arges.KinectRemote.Data;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -24,7 +25,9 @@ namespace Arges.KinectRemote.Transport
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange, "fanout");
 
-            var queue = _channel.QueueDeclare();
+            // Setting up the ttl to 30ms, since we don't particularly care about outdated frames.
+            var queueParams = new Dictionary<string, object>() { {"x-message-ttl", 30} };
+            var queue = _channel.QueueDeclare("", false, true, true, queueParams);
             _channel.QueueBind(queue, exchange, "");
 
             Consumer = new QueueingBasicConsumer(_channel);
