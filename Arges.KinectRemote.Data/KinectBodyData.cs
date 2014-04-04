@@ -23,11 +23,6 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(2)]
         public List<KinectBodyData> Bodies;
 
-        /// <summary>
-        /// The time this bundle was created.
-        /// </summary>
-        [ProtoMember(3)]
-        public long CreatedUTCTime;
     }
 
     /// <summary>

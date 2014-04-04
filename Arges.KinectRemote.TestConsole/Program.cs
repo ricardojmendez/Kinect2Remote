@@ -74,7 +74,7 @@ namespace Arges.KinectRemote.TestConsole
             Console.WriteLine("{0} Logging data bundle for {1} ", DateTime.UtcNow.ToFileTimeUtc(), bundle.DeviceConnectionId);
             if (bundle.Bodies != null)
             {
-                Console.WriteLine("Bundle contains {0} bodies. Create time: {1}", bundle.Bodies.Count, bundle.CreatedUTCTime);
+                Console.WriteLine("Bundle contains {0} bodies", bundle.Bodies.Count);
                 foreach (var body in bundle.Bodies)
                 {
                     Console.WriteLine("- Body {0}", body.BodyId);
