@@ -50,6 +50,31 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(3), ProtoEnum]
         public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
 
+        [ProtoMember(4)]
+        /// <summary>
+        /// Left hand state from the list of possible Kinect hand states
+        /// </summary>
+        public KinectHandState HandLeftState;
+
+        [ProtoMember(5)]
+        /// <summary>
+        /// Right hand state from the list of possible Kinect hand states
+        /// </summary>
+        public KinectHandState HandRightState;
+
+        [ProtoMember(6)]
+        /// <summary>
+        /// Confidence for the left hand state
+        /// </summary>
+        public float HandLeftConfidence;
+
+        [ProtoMember(7)]
+        /// <summary>
+        /// Confidence for the right hand state
+        /// </summary>
+        public float HandRightConfidence;
+
+
         /// <summary>
         /// Offsets joints to a particular distance.
         /// </summary>
@@ -68,6 +93,17 @@ namespace Arges.KinectRemote.Data
         }
     }
 
+
+    [ProtoContract]
+    public enum KinectHandState
+    {
+        Unknown = 0,
+        NotTracked = 1,
+        Open = 2,
+        Closed = 3,
+        Lasso = 4,
+    }
+   
 
     [ProtoContract]
     public enum KinectJointType

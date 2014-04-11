@@ -78,6 +78,7 @@ namespace Arges.KinectRemote.TestConsole
                 foreach (var body in bundle.Bodies)
                 {
                     Console.WriteLine("- Body {0}", body.BodyId);
+                    Console.WriteLine("- Hand States. Left {0} (Conf: {1}) Right {2} (Conf: {3})", body.HandLeftState, body.HandLeftConfidence, body.HandRightState, body.HandRightConfidence);
                     Console.WriteLine("- Joints");
                     foreach (var joint in body.Joints)
                     {
