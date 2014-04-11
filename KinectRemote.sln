@@ -9,13 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Data", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.TestConsole", "Arges.KinectRemote.TestConsole\Arges.KinectRemote.TestConsole.csproj", "{B5F99D8F-1B0F-40E3-A45E-CB27D8886233}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3F51CF4A-E849-41AE-B45E-32FEAC28A8B2}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transport", "Arges.KinectRemote.Transport\Arges.KinectRemote.Transport.csproj", "{7ADD864F-EFDB-4D34-B39B-29DD5204B7ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transmitter", "Arges.KinectRemote.Transmitter\Arges.KinectRemote.Transmitter.csproj", "{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}"
