@@ -6,10 +6,11 @@
 Kinect2Remote is a .net4 project which connects to the Kinect sensor, handles body messages, packages them and sends over the wire via RabbitMQ to possibly multiple receivers.
 
 This has multiple uses, including:
-* Using Kinect data on devices where the Kinect SDK is not supported (such as OSX)
+* Displacing heavy computation onto a separate computer.  Kinect2 can be GPU intensive, and you may want to free up this GPU power for your rendering, displacing any body data filtering and processing to a dedicated machine.
+* Using Kinect data on devices where the Kinect SDK is not supported (such as OSX or Linux).
 * Sending Kinect data to an application where you don't have access to .Net 4.5 (such as Unity)
-* Connecting more devices on a single application than the SDK currently allows
-* Sharing a Kinect for testing purposes
+* Connecting more devices on a single application than the SDK currently allows.
+* Sharing a Kinect for testing purposes.
 
 You'll need a [RabbitMQ server](http://rabbitmq.com).
 
