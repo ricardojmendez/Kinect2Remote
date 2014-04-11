@@ -42,7 +42,6 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(6)]
         public KinectVector4 Rotation;
 
-#if JointMirroringMethods
         public static bool IsJointMirrorable(int jointIndex)
         {
             return jointIndex != GetSkeletonMirroredJoint(jointIndex);
@@ -60,6 +59,10 @@ namespace Arges.KinectRemote.Data
                     return (int)KinectJointType.WristRight;
                 case (int)KinectJointType.HandLeft:
                     return (int)KinectJointType.HandRight;
+                case (int)KinectJointType.HandTipLeft:
+                    return (int)KinectJointType.HandTipRight;
+                case (int)KinectJointType.ThumbLeft:
+                    return (int)KinectJointType.ThumbRight;
                 case (int)KinectJointType.ShoulderRight:
                     return (int)KinectJointType.ShoulderLeft;
                 case (int)KinectJointType.ElbowRight:
@@ -68,6 +71,10 @@ namespace Arges.KinectRemote.Data
                     return (int)KinectJointType.WristLeft;
                 case (int)KinectJointType.HandRight:
                     return (int)KinectJointType.HandLeft;
+                case (int)KinectJointType.HandTipRight:
+                    return (int)KinectJointType.HandTipLeft;
+                case (int)KinectJointType.ThumbRight:
+                    return (int)KinectJointType.ThumbLeft;
                 case (int)KinectJointType.HipLeft:
                     return (int)KinectJointType.HipRight;
                 case (int)KinectJointType.KneeLeft:
@@ -88,7 +95,6 @@ namespace Arges.KinectRemote.Data
 
             return jointIndex;
         }
-#endif
 
         public override string ToString()
         {
