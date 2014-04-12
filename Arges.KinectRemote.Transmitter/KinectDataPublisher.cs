@@ -23,9 +23,11 @@ namespace Arges.KinectRemote.Transmitter
         /// <param name="ipAddress">IP Address for the RabbitMQ server</param>
         /// <param name="exchangeName">Exchange to publish information to</param>
         /// <param name="senderID">Sender ID, used as the first part of the topic</param>
-        public KinectDataPublisher(string ipAddress, string exchangeName, string senderID)
+        /// <param name="username">Username</param>
+        /// <param name="password">Password</param>
+        public KinectDataPublisher(string ipAddress, string exchangeName, string senderID, string username = "guest", string password = "guest")
         {
-            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID);
+            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID, username, password);
 
             Console.WriteLine("Starting all sensors");
             _kinectRuntime.StartAllSensors();

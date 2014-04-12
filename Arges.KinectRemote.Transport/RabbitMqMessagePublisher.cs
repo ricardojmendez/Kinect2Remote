@@ -14,13 +14,14 @@ namespace Arges.KinectRemote.Transport
         IConnection _connection;
         IModel _channel;
 
-        public RabbitMqMessagePublisher(string ipAddress, string exchangeName, string senderID)
+        public RabbitMqMessagePublisher(string ipAddress, string exchangeName, string senderID, string username = "guest", string password = "guest")
             : base(ipAddress, exchangeName)
         {
             Console.WriteLine("[RMQ] Creating RabbitMq publisher on {0} for protocol {1}", IpAddress, ConnectionString);
 
             _senderID = senderID;
-            _factory = new ConnectionFactory() { HostName = IpAddress };
+            _factory = new ConnectionFactory() { HostName = IpAddress, UserName = username, Password = password };
+        
             _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
 
