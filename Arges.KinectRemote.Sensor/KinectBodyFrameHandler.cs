@@ -131,7 +131,7 @@ namespace Arges.KinectRemote.Sensor
             var spine = body.Joints[JointType.SpineBase];
 
             // This is to keep the skeleton entity unique across all devices.
-            d.BodyId = string.Format("{0}-{1}", deviceConnectionId, body.TrackingId.ToString());
+            d.BodyId = string.Format("{0}.{1}", deviceConnectionId, body.TrackingId.ToString());
 
             // All six bodies are fully tracked. Wee!
             int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;

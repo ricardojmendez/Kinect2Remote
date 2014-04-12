@@ -17,9 +17,15 @@ namespace Arges.KinectRemote.Transmitter
 
         public bool BroadcastEnabled { set; get; }
 
-        public KinectDataPublisher(string ipAddress, string exchangeName)
+        /// <summary>
+        /// Initializes a Kinect Data Publisher
+        /// </summary>
+        /// <param name="ipAddress">IP Address for the RabbitMQ server</param>
+        /// <param name="exchangeName">Exchange to publish information to</param>
+        /// <param name="senderID">Sender ID, used as the first part of the topic</param>
+        public KinectDataPublisher(string ipAddress, string exchangeName, string senderID)
         {
-            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName);
+            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID);
 
             Console.WriteLine("Starting all sensors");
             _kinectRuntime.StartAllSensors();
@@ -52,7 +58,8 @@ namespace Arges.KinectRemote.Transmitter
             bundle = new KinectBodyBag
             {
                 DeviceConnectionId = deviceID,
-                Bodies = bodyData            };
+                Bodies = bodyData            
+            };
 
             return bundle;
         }

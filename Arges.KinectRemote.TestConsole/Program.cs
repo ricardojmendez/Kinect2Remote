@@ -10,33 +10,42 @@ namespace Arges.KinectRemote.TestConsole
 {
     class Program
     {
-        private static string _exchange;
-        private static string _ipAddress;
+        static string _exchange;
+        static string _ipAddress;
+        static string _bindingKey;
 
         private static void ReadConfigSettings()
         {
             _exchange = ConfigurationManager.AppSettings["exchange"].Trim();
             _ipAddress = ConfigurationManager.AppSettings["ipAddress"].Trim();
+            _bindingKey = ConfigurationManager.AppSettings["bindingKey"].Trim();
             if(string.IsNullOrEmpty(_exchange))
             {
                 throw new System.Exception("Exchange is not specified in the app.config.");
             }
             if (string.IsNullOrEmpty(_ipAddress))
             {
-                throw new System.Exception("IP Address is not specified in the app.config.");
+                Console.WriteLine("IP Address not specified. Connecting to local host.");
+                _ipAddress = "127.0.0.1";
+            }
+            if (string.IsNullOrEmpty(_bindingKey))
+            {
+                Console.WriteLine("Binding key not specified. Binding to all remotes for body information.");
+                _bindingKey = "*.body";
             }
             Console.WriteLine(string.Format("Exchange is: {0}", _exchange));
             Console.WriteLine(string.Format("IP address is: {0}", _ipAddress));
+            Console.WriteLine(string.Format("Listening to: {0}", _bindingKey));
         }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             ReadConfigSettings();
             
             try
             {
 #if OnlyLast
-                using (var receiver = new KinectBodyReceiverLastOnly(_ipAddress, _exchange))
+                using (var receiver = new KinectBodyReceiverLastOnly(_ipAddress, _exchange, _bindingKey))
 #else
                 using (var receiver = new KinectBodyReceiver(_ipAddress, _exchange))
 #endif

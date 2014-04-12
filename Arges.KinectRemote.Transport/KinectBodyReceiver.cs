@@ -13,22 +13,30 @@ namespace Arges.KinectRemote.Transport
     /// <seealso cref="Arges.KinectRemote.Data.KinectBodyBag"/>
     public class KinectBodyReceiver: IDisposable
     {
+        string _bindingKey;
         IConnection _connection;
         IModel _channel;
 
         public QueueingBasicConsumer Consumer { get; private set; }
-
-        public KinectBodyReceiver(string ipAddress, string exchange)
+        
+        /// <summary>
+        /// Initializes a new KinectBodyReceiver
+        /// </summary>
+        /// <param name="ipAddress">RabbitMQ server IP address</param>
+        /// <param name="exchange">Exchange to connect to</param>
+        /// <param name="bindingKey">Binding key to get body data from. We currently support only one.</param>
+        public KinectBodyReceiver(string ipAddress, string exchange, string bindingKey)
         {
             var factory = new ConnectionFactory() { HostName = ipAddress };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange, "fanout");
+            _channel.ExchangeDeclare(exchange, "topic");
+            _bindingKey = bindingKey;
 
             // Setting up the ttl to 30ms, since we don't particularly care about outdated frames.
             var queueParams = new Dictionary<string, object>() { {"x-message-ttl", 30} };
             var queue = _channel.QueueDeclare("", false, true, true, queueParams);
-            _channel.QueueBind(queue, exchange, "");
+            _channel.QueueBind(queue, exchange, bindingKey);
 
             Consumer = new QueueingBasicConsumer(_channel);
             _channel.BasicConsume(queue, true, Consumer);
