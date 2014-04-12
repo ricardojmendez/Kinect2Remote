@@ -20,9 +20,9 @@ namespace Arges.KinectRemote.Transport
 
         public KeepLastOnlyConsumer Consumer { get; private set; }
 
-        public KinectBodyReceiverLastOnly(string ipAddress, string exchange, string bindingKey)
+        public KinectBodyReceiverLastOnly(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
         {
-            var factory = new ConnectionFactory() { HostName = ipAddress };
+            var factory = new ConnectionFactory() { HostName = ipAddress, UserName = username, Password = password };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange, "topic");
