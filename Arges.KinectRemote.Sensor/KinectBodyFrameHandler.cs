@@ -23,6 +23,20 @@ namespace Arges.KinectRemote.Sensor
             Bodies = new Body[6];
         }
 
+        ~KinectBodyFrameHandler()
+        {
+            if (Bodies != null)
+            {
+                foreach (var body in Bodies)
+                {
+                    if (body != null)
+                    {
+                        body.Dispose();
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Handler called whenever one of the sensors has a frame ready.
         /// </summary>
