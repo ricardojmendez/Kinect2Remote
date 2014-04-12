@@ -35,7 +35,8 @@ It also includes two test applications:
 ## General notes
 
 * The producer and consumer need to be configured using the IP address of a RabbitMQ server, as well as an exchange name.
-* The exchange is created as a fanout, meaning that all applications connecting to the same exchang will receive the same data.
+* The exchange is created as a topic, meaning that all applications connecting to the same exchang will potentially receive the same data BUT can choose which remotes to subscribe to (default is all).
+* The sender id for binding to body data is {remoteName}.body, defaulting to defaultRemote.body.
 * The producer will send all available body information for all connected sensors to the same exchange. The sensor ID is encoded on the information sent.
 * The current Dequeue method is a blocking call.  Do not use it from an Update method on a Unity application, use DequeueNoWait instead.
 * Messages on the consumer queues have a TTL of 30ms, since we don't really care about outdated frames. We could expose this as a parameter, but I'm not complicating things right now.
