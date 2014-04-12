@@ -9,10 +9,11 @@ namespace Arges.KinectRemote.Transmitter
         {
             var exchange = ConfigurationManager.AppSettings["exchange"];
             var ipAddress = ConfigurationManager.AppSettings["ipAddress"];
+            var senderID = ConfigurationManager.AppSettings["senderID"];
 
 
             Console.WriteLine("Initializing Kinect data transmitter...");
-            var publisher = new KinectDataPublisher(ipAddress, exchange);
+            var publisher = new KinectDataPublisher(ipAddress, exchange, senderID);
 
             Console.WriteLine("Press ENTER to exit");
             Console.ReadLine();
