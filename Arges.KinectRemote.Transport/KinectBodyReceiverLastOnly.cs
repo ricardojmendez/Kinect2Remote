@@ -17,19 +17,20 @@ namespace Arges.KinectRemote.Transport
         IConnection _connection;
         IModel _channel;
 
+
         public KeepLastOnlyConsumer Consumer { get; private set; }
 
-        public KinectBodyReceiverLastOnly(string ipAddress, string exchange)
+        public KinectBodyReceiverLastOnly(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
         {
-            var factory = new ConnectionFactory() { HostName = ipAddress };
+            var factory = new ConnectionFactory() { HostName = ipAddress, UserName = username, Password = password };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange, "fanout");
+            _channel.ExchangeDeclare(exchange, "topic");
 
             // Setting up the ttl to 30ms, since we don't particularly care about outdated frames.
             var queueParams = new Dictionary<string, object>() { { "x-message-ttl", 30 } };
             var queue = _channel.QueueDeclare("", false, true, true, queueParams);
-            _channel.QueueBind(queue, exchange, "");
+            _channel.QueueBind(queue, exchange, bindingKey);
 
             Consumer = new KeepLastOnlyConsumer(_channel);
             _channel.BasicConsume(queue, true, Consumer);
