@@ -23,20 +23,6 @@ namespace Arges.KinectRemote.Sensor
             Bodies = new Body[6];
         }
 
-        ~KinectBodyFrameHandler()
-        {
-            if (Bodies != null)
-            {
-                foreach (var body in Bodies)
-                {
-                    if (body != null)
-                    {
-                        body.Dispose();
-                    }
-                }
-            }
-        }
-
         /// <summary>
         /// Handler called whenever one of the sensors has a frame ready.
         /// </summary>
@@ -47,18 +33,15 @@ namespace Arges.KinectRemote.Sensor
         /// </summary>
         public void StartAllSensors()
         {
-            Console.WriteLine("Starting sensors. Total found: {0}", KinectSensor.KinectSensors.Count);
-            Console.WriteLine("- Default sensor: {0}", KinectSensor.Default.UniqueKinectId);
-            foreach (KinectSensor s in KinectSensor.KinectSensors.Where(x => !x.IsOpen))
-            {
-                Console.WriteLine("- Opening sensor: {0}", s.UniqueKinectId);
+            var sensor = KinectSensor.GetDefault();
+            Console.WriteLine("- Default sensor: {0}", sensor.UniqueKinectId);
+            Console.WriteLine("- Opening sensor: {0}", sensor.UniqueKinectId);
 
-                s.Open();
+            sensor.Open();
 
-                var reader = s.BodyFrameSource.OpenReader();
-                reader.FrameArrived += new EventHandler<BodyFrameArrivedEventArgs>(OnFrameArrived);
-                BodyFrameReaders.Add(reader);
-            }
+            var reader = sensor.BodyFrameSource.OpenReader();
+            reader.FrameArrived += new EventHandler<BodyFrameArrivedEventArgs>(OnFrameArrived);
+            BodyFrameReaders.Add(reader);
         }
 
         private void OnFrameArrived(object sender, BodyFrameArrivedEventArgs e)
@@ -102,11 +85,9 @@ namespace Arges.KinectRemote.Sensor
             }
             BodyFrameReaders.Clear();
 
-            foreach (KinectSensor s in KinectSensor.KinectSensors.Where(x => x.IsOpen))
-            {
-                Console.WriteLine("Closing sensor {0}", s.UniqueKinectId);
-                s.Close();
-            }
+            Console.WriteLine("Closing sensor");
+            KinectSensor.GetDefault().Close();
+            Console.WriteLine("Closed sensor");
         }
 
 #if KINECT1
