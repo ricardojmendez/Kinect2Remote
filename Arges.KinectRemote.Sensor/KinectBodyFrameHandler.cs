@@ -17,10 +17,22 @@ namespace Arges.KinectRemote.Sensor
 
         public Body[] Bodies { get; private set; }
 
+        /// <summary>
+        /// Unique sensor ID generated at runtime, so that remotes can tell 
+        /// which sensor the data is coming from
+        /// </summary>
+        /// <remarks>
+        /// This is likely to be a temporary fix while Microsoft implements 
+        /// a sensor id. If they do not, we can expand it to be a value that
+        /// can be set by the developer.
+        /// </remarks>
+        public string RemoteId { get; private set; }
+
         public KinectBodyFrameHandler()
         {
             BodyFrameReaders = new List<BodyFrameReader>();
             Bodies = new Body[6];
+            RemoteId = Guid.NewGuid().ToString("d");
         }
 
         /// <summary>
@@ -31,11 +43,11 @@ namespace Arges.KinectRemote.Sensor
         /// <summary>
         /// Enables tracking and starts all sensors
         /// </summary>
-        public void StartAllSensors()
+        public void StartSensor()
         {
             var sensor = KinectSensor.GetDefault();
-            Console.WriteLine("- Default sensor: {0}", sensor.UniqueKinectId);
-            Console.WriteLine("- Opening sensor: {0}", sensor.UniqueKinectId);
+            Console.WriteLine("- Default sensor: {0}", RemoteId);
+            Console.WriteLine("- Opening sensor: {0}", RemoteId);
 
             sensor.Open();
 
@@ -67,10 +79,10 @@ namespace Arges.KinectRemote.Sensor
 
                 foreach (Body body in Bodies.Where(b => b.IsTracked))
                 {
-                    resultingBodies.Add(MapBody(body, sensor.UniqueKinectId));
+                    resultingBodies.Add(MapBody(body, RemoteId));
                 }
 
-                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, sensor.UniqueKinectId));
+                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, RemoteId));
             }
         }
 
