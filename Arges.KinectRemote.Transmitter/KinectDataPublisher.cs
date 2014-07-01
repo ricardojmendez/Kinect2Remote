@@ -30,7 +30,7 @@ namespace Arges.KinectRemote.Transmitter
             _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID, username, password);
 
             Console.WriteLine("Starting all sensors");
-            _kinectRuntime.StartAllSensors();
+            _kinectRuntime.StartSensor();
             _kinectRuntime.BodyFrameReady += new EventHandler<BodyFrameReadyEventArgs>(OnBodyFrameReady);
             Console.WriteLine("All Kinect Sensors are started.");
 
