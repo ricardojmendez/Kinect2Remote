@@ -9,7 +9,13 @@ namespace Arges.KinectRemote.Transport
     /// </summary>
     public sealed class RabbitMqMessagePublisher : MessagePublisherBase, IDisposable
     {
+        /// <summary>
+        /// Sender identifier, used by the receiver to filter which senders they
+        /// care about. It is independent from the sensor ID since a sender may 
+        /// have multiple sensors.
+        /// </summary>
         string _senderID;
+
         ConnectionFactory _factory;
         IConnection _connection;
         IModel _channel;

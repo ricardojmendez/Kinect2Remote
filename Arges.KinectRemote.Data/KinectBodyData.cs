@@ -22,7 +22,6 @@ namespace Arges.KinectRemote.Data
         /// </summary>
         [ProtoMember(2)]
         public List<KinectBodyData> Bodies;
-
     }
 
     /// <summary>
