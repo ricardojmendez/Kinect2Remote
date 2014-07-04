@@ -7,7 +7,7 @@ using Arges.KinectRemote.Sensor;
 namespace Arges.KinectRemote.Transmitter
 {
     /// <summary>
-    /// Connects to the available Kinect sensors, encondes the body data for publishing
+    /// Connects to the available Kinect sensors, encodes the body data for publishing
     /// and sends it over the wire serialized.
     /// </summary>
     public class KinectDataPublisher
@@ -45,24 +45,7 @@ namespace Arges.KinectRemote.Transmitter
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
         {
-            BodyDataReady(e.SensorId, e.Bodies);
-        }
-
-
-        /// <summary>
-        /// Creates a body bag with the body data received
-        /// </summary>
-        /// <param name="bodyData">List of KinectBodyData items to add to the bag</param>
-        /// <param name="sensorId">Kinect Sensor ID that they were received from.</param>
-        static KinectBodyBag StuffBodyBag(string sensorId, List<KinectBodyData> bodyData)
-        {
-            var bundle = new KinectBodyBag
-            {
-                SensorId = sensorId,
-                Bodies = bodyData            
-            };
-
-            return bundle;
+            ProcessBodies(e.SensorId, e.Bodies);
         }
 
         /// <summary>
@@ -70,15 +53,23 @@ namespace Arges.KinectRemote.Transmitter
         /// </summary>
         /// <param name="bodies">List of bodies to send</param>
         /// <param name="sensorId">Device ID for the Kinect sensor</param>
-        public void BodyDataReady(string sensorId, List<KinectBodyData> bodies)
+        void ProcessBodies(string sensorId, List<KinectBodyData> bodies)
         {
             if (!BroadcastEnabled || bodies.Count == 0) 
             { 
                 return; 
             }
 
-            KinectBodyBag bundle = StuffBodyBag(sensorId, bodies);
-            _messagePublisher.SerializeAndSendObject(bundle);
+            var stuffedBodyBag = new KinectBodyBag
+            {
+                SensorId = sensorId,
+                Bodies = bodies
+            };
+
+            // We may want to add some object pre-processing here, or 
+            // just let the receivers take care of that.
+
+            _messagePublisher.SerializeAndSendObject(stuffedBodyBag);
         }
     }
 }

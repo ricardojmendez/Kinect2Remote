@@ -21,7 +21,7 @@ namespace Arges.KinectRemote.TestConsole
             _bindingKey = ConfigurationManager.AppSettings["bindingKey"].Trim();
             if(string.IsNullOrEmpty(_exchange))
             {
-                throw new Exception("Exchange is not specified in the app.config.");
+                throw new ArgumentException("Exchange is not specified in the app.config.");
             }
             if (string.IsNullOrEmpty(_ipAddress))
             {
