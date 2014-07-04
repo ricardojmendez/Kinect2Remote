@@ -19,7 +19,6 @@ _Warning: This is based on preliminary software and/or hardware, subject to chan
 
 ## Projects 
 
-
 The following libraries are included:
 
 * Arges.KinectRemote.Sensor: handles communication with the Kinect device.
@@ -41,6 +40,12 @@ It also includes two test applications:
 * The current Dequeue method is a blocking call.  Do not use it from an Update method on a Unity application, use DequeueNoWait instead.
 * Messages on the consumer queues have a TTL of 30ms, since we don't really care about outdated frames. We could expose this as a parameter, but I'm not complicating things right now.
 * KeepLastOnlyConsumer is a custom subclass of DefaultBasicConsumer which does not keep a queue, but instead stores only the last message received.
+
+
+## Kinect2Remote and Unity
+
+Using the Kinect 2 Remote with Unity?  [You'll need a custom RabbitMQ .Net client](https://github.com/ricardojmendez/rabbitmq-dotnet-client) for now.  [See this pull request for details](https://github.com/rabbitmq/rabbitmq-dotnet-client/pull/24).
+
 
 ## TODO
 
