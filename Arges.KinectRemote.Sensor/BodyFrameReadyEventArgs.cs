@@ -6,11 +6,10 @@ namespace Arges.KinectRemote.Sensor
 {
     public class BodyFrameReadyEventArgs : EventArgs
     {
-
         private readonly List<KinectBodyData> _bodies;
         private readonly string _sensorId;
 
-        public BodyFrameReadyEventArgs(List<KinectBodyData> bodies, string sensorId)
+        public BodyFrameReadyEventArgs(string sensorId, List<KinectBodyData> bodies)
         {
             if (string.IsNullOrEmpty(sensorId))
             {
@@ -22,15 +21,12 @@ namespace Arges.KinectRemote.Sensor
 
         public List<KinectBodyData> Bodies
         {
-            get
-            {
-                return _bodies;
-            }
+            get { return _bodies; }
         }
 
         public string SensorId
         {
-            get { return _sensorId; } 
+            get { return _sensorId; }
         }
     }
 }

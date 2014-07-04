@@ -85,7 +85,7 @@ namespace Arges.KinectRemote.Sensor
                     .Select(body => MapBody(body, SensorId))
                     .ToList();
 
-                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, SensorId));
+                BodyFrameReady(this, new BodyFrameReadyEventArgs(SensorId, resultingBodies));
             }
         }
 
