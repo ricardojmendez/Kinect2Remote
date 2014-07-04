@@ -45,7 +45,7 @@ namespace Arges.KinectRemote.Transmitter
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
         {
-            BodyDataReady(e.DeviceConnectionId, e.Bodies);
+            BodyDataReady(e.SensorId, e.Bodies);
         }
 
 
@@ -53,13 +53,12 @@ namespace Arges.KinectRemote.Transmitter
         /// Creates a body bag with the body data received
         /// </summary>
         /// <param name="bodyData">List of KinectBodyData items to add to the bag</param>
-        /// <param name="deviceID">Kinect Sensor ID that they were received from.</param>
-        static KinectBodyBag StuffBodyBag(string deviceID, List<KinectBodyData> bodyData)
+        /// <param name="sensorId">Kinect Sensor ID that they were received from.</param>
+        static KinectBodyBag StuffBodyBag(string sensorId, List<KinectBodyData> bodyData)
         {
-            KinectBodyBag bundle = null;
-            bundle = new KinectBodyBag
+            var bundle = new KinectBodyBag
             {
-                DeviceConnectionId = deviceID,
+                SensorId = sensorId,
                 Bodies = bodyData            
             };
 
@@ -70,17 +69,16 @@ namespace Arges.KinectRemote.Transmitter
         /// Called when data is ready, creates a bundle, serializes it and broadcasts it
         /// </summary>
         /// <param name="bodies">List of bodies to send</param>
-        /// <param name="deviceConnectionId">Device ID for the Kinect sensor</param>
-        public void BodyDataReady(string deviceConnectionId, List<KinectBodyData> bodies)
+        /// <param name="sensorId">Device ID for the Kinect sensor</param>
+        public void BodyDataReady(string sensorId, List<KinectBodyData> bodies)
         {
             if (!BroadcastEnabled || bodies.Count == 0) 
             { 
                 return; 
             }
 
-            KinectBodyBag bundle = StuffBodyBag(deviceConnectionId, bodies);
+            KinectBodyBag bundle = StuffBodyBag(sensorId, bodies);
             _messagePublisher.SerializeAndSendObject<KinectBodyBag>(bundle);
         }
-
     }
 }

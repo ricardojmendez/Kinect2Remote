@@ -15,7 +15,7 @@ namespace Arges.KinectRemote.Data
         /// Unique Kinect Sensor Id
         /// </summary>
         [ProtoMember(1)]
-        public string DeviceConnectionId;
+        public string SensorId;
 
         /// <summary>
         /// List of tracked skeletons

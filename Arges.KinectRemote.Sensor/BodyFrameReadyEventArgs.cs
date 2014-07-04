@@ -10,16 +10,16 @@ namespace Arges.KinectRemote.Sensor
     {
 
         private readonly List<KinectBodyData> _bodies;
-        private readonly string _deviceConnectionId;
+        private readonly string _sensorId;
 
-        public BodyFrameReadyEventArgs(List<KinectBodyData> bodies, string deviceConnectionId)
+        public BodyFrameReadyEventArgs(List<KinectBodyData> bodies, string sensorId)
         {
-            if (string.IsNullOrEmpty(deviceConnectionId))
+            if (string.IsNullOrEmpty(sensorId))
             {
-                throw new ArgumentException("deviceConnectionId");
+                throw new ArgumentException("sensorId");
             }
             _bodies = bodies;
-            _deviceConnectionId = deviceConnectionId;
+            _sensorId = sensorId;
         }
 
         public List<KinectBodyData> Bodies
@@ -30,12 +30,9 @@ namespace Arges.KinectRemote.Sensor
             }
         }
 
-        public string DeviceConnectionId
+        public string SensorId
         {
-            get
-            {
-                return _deviceConnectionId;
-            }
+            get { return _sensorId; } 
         }
     }
 }

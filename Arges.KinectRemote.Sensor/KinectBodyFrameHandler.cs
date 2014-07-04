@@ -31,13 +31,13 @@ namespace Arges.KinectRemote.Sensor
         /// a sensor id. If they do not, we can expand it to be a value that
         /// can be set by the developer.
         /// </remarks>
-        public string RemoteId { get; private set; }
+        public string SensorId { get; private set; }
 
         public KinectBodyFrameHandler()
         {
             BodyFrameReaders = new List<BodyFrameReader>();
             Bodies = new Body[6];
-            RemoteId = Guid.NewGuid().ToString("d");
+            SensorId = Guid.NewGuid().ToString("d");
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Arges.KinectRemote.Sensor
         public void StartSensor()
         {
             var sensor = KinectSensor.GetDefault();
-            Console.WriteLine("- Opening sensor: {0}", RemoteId);
+            Console.WriteLine("- Opening sensor: {0}", SensorId);
 
             sensor.Open();
 
@@ -83,14 +83,13 @@ namespace Arges.KinectRemote.Sensor
                 frame.GetAndRefreshBodyData(Bodies);
 
                 List<KinectBodyData> resultingBodies = new List<KinectBodyData>();
-                var sensor = frame.BodyFrameSource.KinectSensor;
 
                 foreach (Body body in Bodies.Where(b => b.IsTracked))
                 {
-                    resultingBodies.Add(MapBody(body, RemoteId));
+                    resultingBodies.Add(MapBody(body, SensorId));
                 }
 
-                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, RemoteId));
+                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, SensorId));
             }
         }
 
@@ -115,17 +114,17 @@ namespace Arges.KinectRemote.Sensor
         /// KinectBodyData we can serialize and send over the wire.
         /// </summary>
         /// <param name="body">Body to map</param>
-        /// <param name="deviceConnectionId">Device connection ID - likely to be the sensor ID</param>
+        /// <param name="sensorId">Sensor ID, or any other value being used as the device connection Id</param>
         /// <returns>Mapped KinectBodyData containing the body information, 
         /// an identifier, and othe processed data</returns>
-        private static KinectBodyData MapBody(Body body, string deviceConnectionId)
+        private static KinectBodyData MapBody(Body body, string sensorId)
         {
             KinectBodyData d = new KinectBodyData();
 
             var spine = body.Joints[JointType.SpineBase];
 
             // This is to keep the skeleton entity unique across all devices.
-            d.BodyId = string.Format("{0}.{1}", deviceConnectionId, body.TrackingId.ToString());
+            d.BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId);
 
             // All six bodies are fully tracked. Wee!
             int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;
@@ -135,8 +134,6 @@ namespace Arges.KinectRemote.Sensor
             {
                 var nativeJoint = body.Joints[(JointType)i];
                 var orientation = body.JointOrientations[(JointType)i].Orientation;
-
-                    
 
                 KinectJoint joint = new KinectJoint
                 {
@@ -168,6 +165,5 @@ namespace Arges.KinectRemote.Sensor
 
             return d;
         }
-
     }
 }
