@@ -99,8 +99,6 @@ namespace Arges.KinectRemote.TestConsole
             {
                 Console.WriteLine("Empty bundle.");
             }
-            
-
         }
     }
 }

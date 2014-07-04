@@ -8,11 +8,16 @@ using Arges.KinectRemote.Data;
 namespace Arges.KinectRemote.Sensor
 {
     /// <summary>
-    /// Defines a simple runtime class that acts as a wrapper for the KinectSDK interface
+    /// Defines a simple runtime class that acts as a wrapper for the KinectSDK body interface
     /// </summary>
     public class KinectBodyFrameHandler
     {
 
+        /// <summary>
+        /// List of known body frame readers. Will for now contain only
+        /// one value, since the Kinect2 SDK does not yet support multiple
+        /// sensors.
+        /// </summary>
         public List<BodyFrameReader> BodyFrameReaders { get; private set; }
 
         public Body[] Bodies { get; private set; }
@@ -46,7 +51,6 @@ namespace Arges.KinectRemote.Sensor
         public void StartSensor()
         {
             var sensor = KinectSensor.GetDefault();
-            Console.WriteLine("- Default sensor: {0}", RemoteId);
             Console.WriteLine("- Opening sensor: {0}", RemoteId);
 
             sensor.Open();
@@ -56,13 +60,17 @@ namespace Arges.KinectRemote.Sensor
             BodyFrameReaders.Add(reader);
         }
 
+        /// <summary>
+        /// Handles a new body frame by creating a list of mapped bodies and sending it over the wire
+        /// </summary>
+        /// <param name="sender">Sender</param>
+        /// <param name="e">Event arguments</param>
         private void OnFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
             if (BodyFrameReady == null)
             {
                 return;
             }
-
 
             var frame = e.FrameReference.AcquireFrame();
             if (frame == null)
@@ -102,35 +110,14 @@ namespace Arges.KinectRemote.Sensor
             Console.WriteLine("Closed sensor");
         }
 
-#if KINECT1
-        void OnSensorFrameReady(object sender, SkeletonFrameReadyEventArgs e)
-        {
-            //no events
-            if (SkeletonFrameReady == null)
-                return;
-
-            using (SkeletonFrame skeletonFrame = e.OpenSkeletonFrame())
-            {
-                //if no data available, nothing to do
-                if (skeletonFrame == null)
-                    return;
-
-                //extract frame data
-                List<KinectSkeletonData> resultingSkeletons = new List<KinectSkeletonData>();
-                Skeleton[] skeletons = new Skeleton[skeletonFrame.SkeletonArrayLength];
-                skeletonFrame.CopySkeletonDataTo(skeletons);
-
-                foreach (Skeleton skel in skeletons)
-                {
-                    resultingSkeletons.Add(MapSkeleton(skel, ((KinectSensor)sender).DeviceConnectionId));
-                }
-
-                //dispatch data
-                SkeletonFrameReady(this, new SkeletonReadyEventArgs(resultingSkeletons, ((KinectSensor)sender).DeviceConnectionId));           
-            }
-        }
-#endif
-
+        /// <summary>
+        /// Maps the information received for a Body from the Kinect to a
+        /// KinectBodyData we can serialize and send over the wire.
+        /// </summary>
+        /// <param name="body">Body to map</param>
+        /// <param name="deviceConnectionId">Device connection ID - likely to be the sensor ID</param>
+        /// <returns>Mapped KinectBodyData containing the body information, 
+        /// an identifier, and othe processed data</returns>
         private static KinectBodyData MapBody(Body body, string deviceConnectionId)
         {
             KinectBodyData d = new KinectBodyData();
