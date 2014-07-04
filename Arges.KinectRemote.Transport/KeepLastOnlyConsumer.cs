@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using RabbitMQ.Client;
+﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-namespace Arges.KinectRemote
+namespace Arges.KinectRemote.Transport
 {
     /// <summary>
     /// Consumer which keeps only the last received item.
     /// </summary>
     public class KeepLastOnlyConsumer : DefaultBasicConsumer
     {
-        object _lock = new object();
+        readonly object _lock = new object();
         BasicDeliverEventArgs _lastItem;
 
         public KeepLastOnlyConsumer(IModel model)
@@ -21,14 +19,16 @@ namespace Arges.KinectRemote
         {
             lock (_lock)
             {
-                var eventArgs = new BasicDeliverEventArgs();
-                eventArgs.ConsumerTag = consumerTag;
-                eventArgs.DeliveryTag = deliveryTag;
-                eventArgs.Redelivered = redelivered;
-                eventArgs.Exchange = exchange;
-                eventArgs.RoutingKey = routingKey;
-                eventArgs.BasicProperties = properties;
-                eventArgs.Body = body;
+                var eventArgs = new BasicDeliverEventArgs
+                {
+                    ConsumerTag = consumerTag,
+                    DeliveryTag = deliveryTag,
+                    Redelivered = redelivered,
+                    Exchange = exchange,
+                    RoutingKey = routingKey,
+                    BasicProperties = properties,
+                    Body = body
+                };
                 _lastItem = eventArgs;
             }
         }
@@ -40,7 +40,7 @@ namespace Arges.KinectRemote
 
         public BasicDeliverEventArgs Pop()
         {
-            BasicDeliverEventArgs result = null;
+            BasicDeliverEventArgs result;
             lock (_lock)
             {
                 result = _lastItem;

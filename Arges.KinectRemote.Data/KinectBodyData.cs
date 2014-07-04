@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
@@ -49,28 +48,28 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(3), ProtoEnum]
         public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
 
-        [ProtoMember(4)]
         /// <summary>
         /// Left hand state from the list of possible Kinect hand states
         /// </summary>
+        [ProtoMember(4)]
         public KinectHandState HandLeftState;
 
-        [ProtoMember(5)]
         /// <summary>
         /// Right hand state from the list of possible Kinect hand states
         /// </summary>
+        [ProtoMember(5)]
         public KinectHandState HandRightState;
 
-        [ProtoMember(6)]
         /// <summary>
         /// Confidence for the left hand state
         /// </summary>
+        [ProtoMember(6)]
         public float HandLeftConfidence;
 
-        [ProtoMember(7)]
         /// <summary>
         /// Confidence for the right hand state
         /// </summary>
+        [ProtoMember(7)]
         public float HandRightConfidence;
 
 

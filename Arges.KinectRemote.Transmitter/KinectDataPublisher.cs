@@ -12,8 +12,8 @@ namespace Arges.KinectRemote.Transmitter
     /// </summary>
     public class KinectDataPublisher
     {
-        MessagePublisherBase _messagePublisher;
-        KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
+        readonly MessagePublisherBase _messagePublisher;
+        readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
 
         public bool BroadcastEnabled { set; get; }
 
@@ -22,16 +22,16 @@ namespace Arges.KinectRemote.Transmitter
         /// </summary>
         /// <param name="ipAddress">IP Address for the RabbitMQ server</param>
         /// <param name="exchangeName">Exchange to publish information to</param>
-        /// <param name="senderID">Sender ID, used as the first part of the topic</param>
+        /// <param name="senderId">Sender ID, used as the first part of the topic</param>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
-        public KinectDataPublisher(string ipAddress, string exchangeName, string senderID, string username = "guest", string password = "guest")
+        public KinectDataPublisher(string ipAddress, string exchangeName, string senderId, string username = "guest", string password = "guest")
         {
-            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID, username, password);
+            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
             Console.WriteLine("Starting all sensors");
             _kinectRuntime.StartSensor();
-            _kinectRuntime.BodyFrameReady += new EventHandler<BodyFrameReadyEventArgs>(OnBodyFrameReady);
+            _kinectRuntime.BodyFrameReady += OnBodyFrameReady;
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
@@ -78,7 +78,7 @@ namespace Arges.KinectRemote.Transmitter
             }
 
             KinectBodyBag bundle = StuffBodyBag(sensorId, bodies);
-            _messagePublisher.SerializeAndSendObject<KinectBodyBag>(bundle);
+            _messagePublisher.SerializeAndSendObject(bundle);
         }
     }
 }

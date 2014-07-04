@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Kinect;
 using Arges.KinectRemote.Data;
 
@@ -56,7 +55,7 @@ namespace Arges.KinectRemote.Sensor
             sensor.Open();
 
             var reader = sensor.BodyFrameSource.OpenReader();
-            reader.FrameArrived += new EventHandler<BodyFrameArrivedEventArgs>(OnFrameArrived);
+            reader.FrameArrived += OnFrameArrived;
             BodyFrameReaders.Add(reader);
         }
 
@@ -82,12 +81,9 @@ namespace Arges.KinectRemote.Sensor
             {
                 frame.GetAndRefreshBodyData(Bodies);
 
-                List<KinectBodyData> resultingBodies = new List<KinectBodyData>();
-
-                foreach (Body body in Bodies.Where(b => b.IsTracked))
-                {
-                    resultingBodies.Add(MapBody(body, SensorId));
-                }
+                var resultingBodies = Bodies.Where(b => b.IsTracked)
+                    .Select(body => MapBody(body, SensorId))
+                    .ToList();
 
                 BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, SensorId));
             }
@@ -119,12 +115,9 @@ namespace Arges.KinectRemote.Sensor
         /// an identifier, and othe processed data</returns>
         private static KinectBodyData MapBody(Body body, string sensorId)
         {
-            KinectBodyData d = new KinectBodyData();
-
-            var spine = body.Joints[JointType.SpineBase];
+            var d = new KinectBodyData { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
 
             // This is to keep the skeleton entity unique across all devices.
-            d.BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId);
 
             // All six bodies are fully tracked. Wee!
             int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;
@@ -135,7 +128,7 @@ namespace Arges.KinectRemote.Sensor
                 var nativeJoint = body.Joints[(JointType)i];
                 var orientation = body.JointOrientations[(JointType)i].Orientation;
 
-                KinectJoint joint = new KinectJoint
+                var joint = new KinectJoint
                 {
                     TrackingState = ((KinectJointTrackingState)(int)nativeJoint.TrackingState),
                     X = nativeJoint.Position.X,

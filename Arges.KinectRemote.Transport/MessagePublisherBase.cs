@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Arges.KinectRemote.Transport
+﻿namespace Arges.KinectRemote.Transport
 {
     public abstract class MessagePublisherBase
     {
