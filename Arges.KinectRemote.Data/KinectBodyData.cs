@@ -72,6 +72,17 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(7)]
         public float HandRightConfidence;
 
+        /// <summary>
+        /// Application-specific body priority
+        /// </summary>
+        /// <remarks>
+        /// Meant for processing in the remote, for example to indicate if
+        /// here is a particular user who we want to designate as the main
+        /// one. The meaning will be application-specific.
+        /// </remarks>
+        [ProtoMember(8)] 
+        public int Priority;
+
 
         /// <summary>
         /// Offsets joints to a particular distance.
