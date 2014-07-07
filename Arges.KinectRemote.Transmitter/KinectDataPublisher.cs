@@ -45,7 +45,10 @@ namespace Arges.KinectRemote.Transmitter
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
         {
-            ProcessBodies(e.SensorId, e.Bodies);
+            if (BroadcastEnabled && e != null && e.Bodies != null && e.Bodies.Count > 0)
+            {
+                ProcessBodies(e.SensorId, e.Bodies);
+            }
         }
 
         /// <summary>
@@ -55,11 +58,6 @@ namespace Arges.KinectRemote.Transmitter
         /// <param name="sensorId">Device ID for the Kinect sensor</param>
         void ProcessBodies(string sensorId, List<KinectBodyData> bodies)
         {
-            if (!BroadcastEnabled || bodies.Count == 0) 
-            { 
-                return; 
-            }
-
             var stuffedBodyBag = new KinectBodyBag
             {
                 SensorId = sensorId,
