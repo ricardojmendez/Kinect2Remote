@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Arges.KinectRemote.TestConsole")]
-[assembly: AssemblyCopyright("Copyright © Arges Systems Inc. 2014")]
+[assembly: AssemblyCopyright("Copyright © Numergent Limited 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
