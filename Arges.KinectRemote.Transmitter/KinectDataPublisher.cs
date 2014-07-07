@@ -15,6 +15,9 @@ namespace Arges.KinectRemote.Transmitter
         readonly MessagePublisherBase _messagePublisher;
         readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
 
+        /// <summary>
+        /// Is the publisher currently allowed to broadcast?
+        /// </summary>
         public bool BroadcastEnabled { set; get; }
 
         /// <summary>
@@ -35,7 +38,6 @@ namespace Arges.KinectRemote.Transmitter
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
-
         }
 
         ~KinectDataPublisher()

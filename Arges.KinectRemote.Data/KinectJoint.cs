@@ -3,6 +3,9 @@ using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
 {
+    /// <summary>
+    /// Encapsulates information about a joint
+    /// </summary>
     [Serializable, ProtoContract]
     public class KinectJoint{
         /// <summary>
@@ -45,6 +48,11 @@ namespace Arges.KinectRemote.Data
             return jointIndex != GetSkeletonMirroredJoint(jointIndex);
         }
 
+        /// <summary>
+        /// Returns the equivalent mirrored joint for a joint index (eg., left hand for right hand)
+        /// </summary>
+        /// <param name="jointIndex">Joint to return the mirror for</param>
+        /// <returns>Mirrored joint index, or the same index if it's not mirrorable</returns>
         public static int GetSkeletonMirroredJoint(int jointIndex)
         {
             switch (jointIndex)
@@ -101,7 +109,9 @@ namespace Arges.KinectRemote.Data
 
     }
 
-
+    /// <summary>
+    /// Joint tracking state
+    /// </summary>
     public enum KinectJointTrackingState{
         NotTracked,
         Inferred,

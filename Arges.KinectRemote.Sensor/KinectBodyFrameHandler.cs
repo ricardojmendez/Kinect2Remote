@@ -150,7 +150,6 @@ namespace Arges.KinectRemote.Sensor
             d.HandLeftState = (KinectHandState)(int)body.HandLeftState;
             d.HandRightState = (KinectHandState)(int)body.HandRightState;
             
-
             // Record hand confidence.  Initially we'll just convert the enum to an int,
             // but we could do some exponential smoothing between their {0,1} values.
             d.HandLeftConfidence = (int)body.HandLeftConfidence;

@@ -31,7 +31,7 @@ namespace Arges.KinectRemote.Data
     {
 
         /// <summary>
-        /// Current Skeleton Id
+        /// Current Body Id
         /// </summary>
         [ProtoMember(1)]
         public string BodyId;
@@ -43,7 +43,7 @@ namespace Arges.KinectRemote.Data
         public KinectJoint[] Joints;
 
         /// <summary>
-        /// Determines how ambiguous is the data
+        /// Indicates if there is any ambiguity in the body
         /// </summary>
         [ProtoMember(3), ProtoEnum]
         public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
@@ -156,6 +156,6 @@ namespace Arges.KinectRemote.Data
         MissingLeftArm = 1 << 2,
         MissingRightArm = 1 << 3,
         ShadowOutOfRange = 1 << 4,
-        ShadowLost = 1 << 5,
+        ShadowLost = 1 << 5
     }
 }

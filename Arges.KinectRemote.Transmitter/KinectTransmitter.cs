@@ -3,7 +3,7 @@ using System.Configuration;
 
 namespace Arges.KinectRemote.Transmitter
 {
-    class KinectTransmitter
+    static class KinectTransmitter
     {
         static void Main(string[] args)
         {
