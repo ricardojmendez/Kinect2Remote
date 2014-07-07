@@ -95,9 +95,9 @@ namespace Arges.KinectRemote.Data
             if (Joints == null) { return; }
             foreach(var joint in Joints)
             {
-                joint.X += x;
-                joint.Y += y;
-                joint.Z += z;
+                joint.Position.X += x;
+                joint.Position.Y += y;
+                joint.Position.Z += z;
             }
         }
     }

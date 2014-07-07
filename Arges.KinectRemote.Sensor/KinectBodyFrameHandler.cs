@@ -131,9 +131,12 @@ namespace Arges.KinectRemote.Sensor
                 var joint = new KinectJoint
                 {
                     TrackingState = ((KinectJointTrackingState)(int)nativeJoint.TrackingState),
-                    X = nativeJoint.Position.X,
-                    Y = nativeJoint.Position.Y,
-                    Z = nativeJoint.Position.Z,
+                    Position = new KinectVector3
+                    {
+                        X = nativeJoint.Position.X, 
+                        Y = nativeJoint.Position.Y, 
+                        Z = nativeJoint.Position.Z
+                    },
                     JointType = ((KinectJointType)(int)nativeJoint.JointType),
                     Rotation = new KinectVector4
                     {
