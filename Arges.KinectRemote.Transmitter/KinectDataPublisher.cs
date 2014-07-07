@@ -18,6 +18,11 @@ namespace Arges.KinectRemote.Transmitter
         readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
 
         /// <summary>
+        /// Last number of bodies sent
+        /// </summary>
+        private int _lastBodyCount = 0;
+
+        /// <summary>
         /// Is the publisher currently allowed to broadcast?
         /// </summary>
         public bool BroadcastEnabled { set; get; }
@@ -56,9 +61,11 @@ namespace Arges.KinectRemote.Transmitter
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
         {
-            if (BroadcastEnabled && e != null && e.Bodies != null && e.Bodies.Count > 0)
+            if (BroadcastEnabled && e != null && e.Bodies != null && 
+                (e.Bodies.Count > 0 || _lastBodyCount != 0))
             {
                 ProcessAndTransmit(e.SensorId, e.Bodies);
+                _lastBodyCount = e.Bodies.Count;
             }
         }
 
