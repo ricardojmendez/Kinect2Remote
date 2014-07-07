@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using Arges.KinectRemote.Data;
 using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 
 namespace Arges.KinectRemote.Transport
 {
@@ -14,21 +13,21 @@ namespace Arges.KinectRemote.Transport
     /// <seealso cref="Arges.KinectRemote.Transport.KinectBodyReceiver"/>
     public class KinectBodyReceiverLastOnly : IDisposable
     {
-        IConnection _connection;
-        IModel _channel;
+        readonly IConnection _connection;
+        readonly IModel _channel;
 
 
         public KeepLastOnlyConsumer Consumer { get; private set; }
 
         public KinectBodyReceiverLastOnly(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
         {
-            var factory = new ConnectionFactory() { HostName = ipAddress, UserName = username, Password = password };
+            var factory = new ConnectionFactory { HostName = ipAddress, UserName = username, Password = password };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare(exchange, "topic");
 
             // Setting up the ttl to 30ms, since we don't particularly care about outdated frames.
-            var queueParams = new Dictionary<string, object>() { { "x-message-ttl", 30 } };
+            var queueParams = new Dictionary<string, object> { { "x-message-ttl", 30 } };
             var queue = _channel.QueueDeclare("", false, true, true, queueParams);
             _channel.QueueBind(queue, exchange, bindingKey);
 

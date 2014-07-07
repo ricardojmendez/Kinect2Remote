@@ -14,19 +14,19 @@ namespace Arges.KinectRemote.Transport
         /// care about. It is independent from the sensor ID since a sender may 
         /// have multiple sensors.
         /// </summary>
-        string _senderID;
+        readonly string _senderId;
 
         ConnectionFactory _factory;
-        IConnection _connection;
-        IModel _channel;
+        readonly IConnection _connection;
+        readonly IModel _channel;
 
-        public RabbitMqMessagePublisher(string ipAddress, string exchangeName, string senderID, string username = "guest", string password = "guest")
+        public RabbitMqMessagePublisher(string ipAddress, string exchangeName, string senderId, string username = "guest", string password = "guest")
             : base(ipAddress, exchangeName)
         {
             Console.WriteLine("[RMQ] Creating RabbitMq publisher on {0} for protocol {1}", IpAddress, ConnectionString);
 
-            _senderID = senderID;
-            _factory = new ConnectionFactory() { HostName = IpAddress, UserName = username, Password = password };
+            _senderId = senderId;
+            _factory = new ConnectionFactory { HostName = IpAddress, UserName = username, Password = password };
         
             _connection = _factory.CreateConnection();
             _channel = _connection.CreateModel();
@@ -42,14 +42,14 @@ namespace Arges.KinectRemote.Transport
         /// </summary>
         /// <param name="data">Byte array to send</param>
         /// <remarks>
-        /// Body data is sent under a topic of senderID.body, so that remotes can 
+        /// Body data is sent under a topic of senderId.body, so that remotes can 
         /// filter out any senders they don't particularly care about.
         /// </remarks>
         public override void SendRawData(byte[] data)
         {
             if (data != null && data.Length > 0)
             {
-                _channel.BasicPublish(ConnectionString, string.Format("{0}.body", _senderID), null, data);
+                _channel.BasicPublish(ConnectionString, string.Format("{0}.body", _senderId), null, data);
             }
         }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Kinect;
 using Arges.KinectRemote.Data;
 
@@ -31,13 +30,13 @@ namespace Arges.KinectRemote.Sensor
         /// a sensor id. If they do not, we can expand it to be a value that
         /// can be set by the developer.
         /// </remarks>
-        public string RemoteId { get; private set; }
+        public string SensorId { get; private set; }
 
         public KinectBodyFrameHandler()
         {
             BodyFrameReaders = new List<BodyFrameReader>();
             Bodies = new Body[6];
-            RemoteId = Guid.NewGuid().ToString("d");
+            SensorId = Guid.NewGuid().ToString("d");
         }
 
         /// <summary>
@@ -51,12 +50,12 @@ namespace Arges.KinectRemote.Sensor
         public void StartSensor()
         {
             var sensor = KinectSensor.GetDefault();
-            Console.WriteLine("- Opening sensor: {0}", RemoteId);
+            Console.WriteLine("- Opening sensor: {0}", SensorId);
 
             sensor.Open();
 
             var reader = sensor.BodyFrameSource.OpenReader();
-            reader.FrameArrived += new EventHandler<BodyFrameArrivedEventArgs>(OnFrameArrived);
+            reader.FrameArrived += OnFrameArrived;
             BodyFrameReaders.Add(reader);
         }
 
@@ -82,15 +81,11 @@ namespace Arges.KinectRemote.Sensor
             {
                 frame.GetAndRefreshBodyData(Bodies);
 
-                List<KinectBodyData> resultingBodies = new List<KinectBodyData>();
-                var sensor = frame.BodyFrameSource.KinectSensor;
+                var resultingBodies = Bodies.Where(b => b.IsTracked)
+                    .Select(body => MapBody(body, SensorId))
+                    .ToList();
 
-                foreach (Body body in Bodies.Where(b => b.IsTracked))
-                {
-                    resultingBodies.Add(MapBody(body, RemoteId));
-                }
-
-                BodyFrameReady(this, new BodyFrameReadyEventArgs(resultingBodies, RemoteId));
+                BodyFrameReady(this, new BodyFrameReadyEventArgs(SensorId, resultingBodies));
             }
         }
 
@@ -115,17 +110,14 @@ namespace Arges.KinectRemote.Sensor
         /// KinectBodyData we can serialize and send over the wire.
         /// </summary>
         /// <param name="body">Body to map</param>
-        /// <param name="deviceConnectionId">Device connection ID - likely to be the sensor ID</param>
+        /// <param name="sensorId">Sensor ID, or any other value being used as the device connection Id</param>
         /// <returns>Mapped KinectBodyData containing the body information, 
         /// an identifier, and othe processed data</returns>
-        private static KinectBodyData MapBody(Body body, string deviceConnectionId)
+        private static KinectBodyData MapBody(Body body, string sensorId)
         {
-            KinectBodyData d = new KinectBodyData();
-
-            var spine = body.Joints[JointType.SpineBase];
+            var d = new KinectBodyData { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
 
             // This is to keep the skeleton entity unique across all devices.
-            d.BodyId = string.Format("{0}.{1}", deviceConnectionId, body.TrackingId.ToString());
 
             // All six bodies are fully tracked. Wee!
             int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;
@@ -136,14 +128,15 @@ namespace Arges.KinectRemote.Sensor
                 var nativeJoint = body.Joints[(JointType)i];
                 var orientation = body.JointOrientations[(JointType)i].Orientation;
 
-                    
-
-                KinectJoint joint = new KinectJoint
+                var joint = new KinectJoint
                 {
                     TrackingState = ((KinectJointTrackingState)(int)nativeJoint.TrackingState),
-                    X = nativeJoint.Position.X,
-                    Y = nativeJoint.Position.Y,
-                    Z = nativeJoint.Position.Z,
+                    Position = new KinectVector3
+                    {
+                        X = nativeJoint.Position.X, 
+                        Y = nativeJoint.Position.Y, 
+                        Z = nativeJoint.Position.Z
+                    },
                     JointType = ((KinectJointType)(int)nativeJoint.JointType),
                     Rotation = new KinectVector4
                     {
@@ -160,7 +153,6 @@ namespace Arges.KinectRemote.Sensor
             d.HandLeftState = (KinectHandState)(int)body.HandLeftState;
             d.HandRightState = (KinectHandState)(int)body.HandRightState;
             
-
             // Record hand confidence.  Initially we'll just convert the enum to an int,
             // but we could do some exponential smoothing between their {0,1} values.
             d.HandLeftConfidence = (int)body.HandLeftConfidence;
@@ -168,6 +160,5 @@ namespace Arges.KinectRemote.Sensor
 
             return d;
         }
-
     }
 }

@@ -1,45 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
 {
+    /// <summary>
+    /// Encapsulates information about a joint
+    /// </summary>
     [Serializable, ProtoContract]
-    public class KinectJoint{
+    public class KinectJoint
+    {
         /// <summary>
-        /// Joint Position X
+        /// Joint position
         /// </summary>
-        [ProtoMember(1)]
-        public float X;
-
-        /// <summary>
-        /// Joint Position Y
-        /// </summary>
-        [ProtoMember(2)]
-        public float Y;
-        /// <summary>
-        /// Joint Position Z
-        /// </summary>
-        [ProtoMember(3)]
-        public float Z;
+        [ProtoMember(1)] 
+        public KinectVector3 Position;
 
         /// <summary>
         /// The tracking state of this joint
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(2)]
         public KinectJointTrackingState TrackingState;
 
         /// <summary>
         /// Type of the joint
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(3)]
         public KinectJointType JointType;
 
         /// <summary>
         /// Hierarchical Rotation of the joint
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(4)]
         public KinectVector4 Rotation;
 
         public static bool IsJointMirrorable(int jointIndex)
@@ -47,6 +38,11 @@ namespace Arges.KinectRemote.Data
             return jointIndex != GetSkeletonMirroredJoint(jointIndex);
         }
 
+        /// <summary>
+        /// Returns the equivalent mirrored joint for a joint index (eg., left hand for right hand)
+        /// </summary>
+        /// <param name="jointIndex">Joint to return the mirror for</param>
+        /// <returns>Mirrored joint index, or the same index if it's not mirrorable</returns>
         public static int GetSkeletonMirroredJoint(int jointIndex)
         {
             switch (jointIndex)
@@ -98,12 +94,14 @@ namespace Arges.KinectRemote.Data
 
         public override string ToString()
         {
-            return string.Format("KinectJoint {0} {1} ({2},{3},{4})", JointType, TrackingState, X, Y, Z);
+            return string.Format("KinectJoint {0} {1} ({2},{3},{4})", JointType, TrackingState, Position.X, Position.Y, Position.Z);
         }
 
     }
 
-
+    /// <summary>
+    /// Joint tracking state
+    /// </summary>
     public enum KinectJointTrackingState{
         NotTracked,
         Inferred,

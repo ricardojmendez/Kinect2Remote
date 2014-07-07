@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="KinectJoint.cs" />
     <Compile Include="KinectBodyData.cs" />
+    <Compile Include="KinectVector3.cs" />
     <Compile Include="KinectVector4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

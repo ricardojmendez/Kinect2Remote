@@ -8,7 +8,7 @@ using Arges.KinectRemote.Transport;
 
 namespace Arges.KinectRemote.TestConsole
 {
-    class Program
+    static class Program
     {
         static string _exchange;
         static string _ipAddress;
@@ -21,7 +21,7 @@ namespace Arges.KinectRemote.TestConsole
             _bindingKey = ConfigurationManager.AppSettings["bindingKey"].Trim();
             if(string.IsNullOrEmpty(_exchange))
             {
-                throw new System.Exception("Exchange is not specified in the app.config.");
+                throw new ArgumentException("Exchange is not specified in the app.config.");
             }
             if (string.IsNullOrEmpty(_ipAddress))
             {
@@ -33,9 +33,9 @@ namespace Arges.KinectRemote.TestConsole
                 Console.WriteLine("Binding key not specified. Binding to all remotes for body information.");
                 _bindingKey = "*.body";
             }
-            Console.WriteLine(string.Format("Exchange is: {0}", _exchange));
-            Console.WriteLine(string.Format("IP address is: {0}", _ipAddress));
-            Console.WriteLine(string.Format("Listening to: {0}", _bindingKey));
+            Console.WriteLine("Exchange is: {0}", _exchange);
+            Console.WriteLine("IP address is: {0}", _ipAddress);
+            Console.WriteLine("Listening to: {0}", _bindingKey);
         }
 
         private static void Main(string[] args)
@@ -68,7 +68,7 @@ namespace Arges.KinectRemote.TestConsole
                     }
                 }
             }
-            catch(System.Exception ex)
+            catch(Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(ex.Message);
@@ -80,19 +80,21 @@ namespace Arges.KinectRemote.TestConsole
 
         static void LogKinectData(KinectBodyBag bundle)
         {
-            Console.WriteLine("{0} Logging data bundle for {1} ", DateTime.UtcNow.ToFileTimeUtc(), bundle.DeviceConnectionId);
+            Console.WriteLine("{0} Logging data bundle for {1} ", DateTime.UtcNow.ToFileTimeUtc(), bundle.SensorId);
             if (bundle.Bodies != null)
             {
                 Console.WriteLine("Bundle contains {0} bodies", bundle.Bodies.Count);
                 foreach (var body in bundle.Bodies)
                 {
-                    Console.WriteLine("- Body {0}", body.BodyId);
+                    Console.WriteLine("- Body {0}", body);
                     Console.WriteLine("- Hand States. Left {0} (Conf: {1}) Right {2} (Conf: {3})", body.HandLeftState, body.HandLeftConfidence, body.HandRightState, body.HandRightConfidence);
+#if LOG_JOINTS
                     Console.WriteLine("- Joints");
                     foreach (var joint in body.Joints)
                     {
-                        Console.WriteLine("  - {0}", joint.ToString());
+                        Console.WriteLine("  - {0}", joint);
                     }
+#endif
                 }
             }
             else

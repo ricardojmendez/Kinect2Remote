@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Arges.KinectRemote.BodyProcessor;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
 using Arges.KinectRemote.Sensor;
@@ -7,35 +9,49 @@ using Arges.KinectRemote.Sensor;
 namespace Arges.KinectRemote.Transmitter
 {
     /// <summary>
-    /// Connects to the available Kinect sensors, encondes the body data for publishing
+    /// Connects to the available Kinect sensors, encodes the body data for publishing
     /// and sends it over the wire serialized.
     /// </summary>
     public class KinectDataPublisher
     {
-        MessagePublisherBase _messagePublisher;
-        KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
+        readonly MessagePublisherBase _messagePublisher;
+        readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
 
+        /// <summary>
+        /// Last number of bodies sent
+        /// </summary>
+        private int _lastBodyCount = 0;
+
+        /// <summary>
+        /// Is the publisher currently allowed to broadcast?
+        /// </summary>
         public bool BroadcastEnabled { set; get; }
+
+        /// <summary>
+        /// List of body processors that we should run each body through 
+        /// before sending it down the wire
+        /// </summary>
+        public List<IBodyEvaluator> BodyEvaluators { get; private set; }
 
         /// <summary>
         /// Initializes a Kinect Data Publisher
         /// </summary>
         /// <param name="ipAddress">IP Address for the RabbitMQ server</param>
         /// <param name="exchangeName">Exchange to publish information to</param>
-        /// <param name="senderID">Sender ID, used as the first part of the topic</param>
+        /// <param name="senderId">Sender ID, used as the first part of the topic</param>
         /// <param name="username">Username</param>
         /// <param name="password">Password</param>
-        public KinectDataPublisher(string ipAddress, string exchangeName, string senderID, string username = "guest", string password = "guest")
+        public KinectDataPublisher(string ipAddress, string exchangeName, string senderId, string username = "guest", string password = "guest")
         {
-            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderID, username, password);
+            _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
             Console.WriteLine("Starting all sensors");
             _kinectRuntime.StartSensor();
-            _kinectRuntime.BodyFrameReady += new EventHandler<BodyFrameReadyEventArgs>(OnBodyFrameReady);
+            _kinectRuntime.BodyFrameReady += OnBodyFrameReady;
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
-
+            BodyEvaluators = new List<IBodyEvaluator>();
         }
 
         ~KinectDataPublisher()
@@ -45,42 +61,36 @@ namespace Arges.KinectRemote.Transmitter
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
         {
-            BodyDataReady(e.DeviceConnectionId, e.Bodies);
-        }
-
-
-        /// <summary>
-        /// Creates a body bag with the body data received
-        /// </summary>
-        /// <param name="bodyData">List of KinectBodyData items to add to the bag</param>
-        /// <param name="deviceID">Kinect Sensor ID that they were received from.</param>
-        static KinectBodyBag StuffBodyBag(string deviceID, List<KinectBodyData> bodyData)
-        {
-            KinectBodyBag bundle = null;
-            bundle = new KinectBodyBag
+            if (BroadcastEnabled && e != null && e.Bodies != null && 
+                (e.Bodies.Count > 0 || _lastBodyCount != 0))
             {
-                DeviceConnectionId = deviceID,
-                Bodies = bodyData            
-            };
-
-            return bundle;
+                ProcessAndTransmit(e.SensorId, e.Bodies);
+                _lastBodyCount = e.Bodies.Count;
+            }
         }
 
         /// <summary>
         /// Called when data is ready, creates a bundle, serializes it and broadcasts it
         /// </summary>
         /// <param name="bodies">List of bodies to send</param>
-        /// <param name="deviceConnectionId">Device ID for the Kinect sensor</param>
-        public void BodyDataReady(string deviceConnectionId, List<KinectBodyData> bodies)
+        /// <param name="sensorId">Device ID for the Kinect sensor</param>
+        void ProcessAndTransmit(string sensorId, List<KinectBodyData> bodies)
         {
-            if (!BroadcastEnabled || bodies.Count == 0) 
-            { 
-                return; 
+            foreach (var evaluator in BodyEvaluators)
+            {
+                foreach (var body in bodies.Where(body => evaluator.ShouldFlagBody(body)))
+                {
+                    body.Ambiguity |= evaluator.FlagToSet;
+                }
             }
 
-            KinectBodyBag bundle = StuffBodyBag(deviceConnectionId, bodies);
-            _messagePublisher.SerializeAndSendObject<KinectBodyBag>(bundle);
+            var stuffedBodyBag = new KinectBodyBag
+            {
+                SensorId = sensorId,
+                Bodies = bodies
+            };
+            
+            _messagePublisher.SerializeAndSendObject(stuffedBodyBag);
         }
-
     }
 }

@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Arges.KinectRemote.Transport")]
+[assembly: AssemblyTitle("Arges.KinectRemote.BodyProcessor")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Arges.KinectRemote.Transport")]
+[assembly: AssemblyProduct("Arges.KinectRemote.BodyProcessor")]
 [assembly: AssemblyCopyright("Copyright © Numergent Limited 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("A2F7B6EC-7105-442C-A5FE-7A7FF4EC722C")]
+[assembly: Guid("1918d558-84c9-4e94-b217-49e05722137c")]
 
 // Version information for an assembly consists of the following four values:
 //

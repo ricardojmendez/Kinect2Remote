@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
@@ -15,7 +15,7 @@ namespace Arges.KinectRemote.Data
         /// Unique Kinect Sensor Id
         /// </summary>
         [ProtoMember(1)]
-        public string DeviceConnectionId;
+        public string SensorId;
 
         /// <summary>
         /// List of tracked skeletons
@@ -32,7 +32,7 @@ namespace Arges.KinectRemote.Data
     {
 
         /// <summary>
-        /// Current Skeleton Id
+        /// Current Body Id
         /// </summary>
         [ProtoMember(1)]
         public string BodyId;
@@ -44,34 +44,45 @@ namespace Arges.KinectRemote.Data
         public KinectJoint[] Joints;
 
         /// <summary>
-        /// Determines how ambiguous is the data
+        /// Indicates if there is any ambiguity in the body
         /// </summary>
         [ProtoMember(3), ProtoEnum]
         public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
 
-        [ProtoMember(4)]
         /// <summary>
         /// Left hand state from the list of possible Kinect hand states
         /// </summary>
+        [ProtoMember(4)]
         public KinectHandState HandLeftState;
 
-        [ProtoMember(5)]
         /// <summary>
         /// Right hand state from the list of possible Kinect hand states
         /// </summary>
+        [ProtoMember(5)]
         public KinectHandState HandRightState;
 
-        [ProtoMember(6)]
         /// <summary>
         /// Confidence for the left hand state
         /// </summary>
+        [ProtoMember(6)]
         public float HandLeftConfidence;
 
-        [ProtoMember(7)]
         /// <summary>
         /// Confidence for the right hand state
         /// </summary>
+        [ProtoMember(7)]
         public float HandRightConfidence;
+
+        /// <summary>
+        /// Application-specific body priority
+        /// </summary>
+        /// <remarks>
+        /// Meant for processing in the remote, for example to indicate if
+        /// here is a particular user who we want to designate as the main
+        /// one. The meaning will be application-specific.
+        /// </remarks>
+        [ProtoMember(8)] 
+        public int Priority;
 
 
         /// <summary>
@@ -85,10 +96,26 @@ namespace Arges.KinectRemote.Data
             if (Joints == null) { return; }
             foreach(var joint in Joints)
             {
-                joint.X += x;
-                joint.Y += y;
-                joint.Z += z;
+                joint.Position.X += x;
+                joint.Position.Y += y;
+                joint.Position.Z += z;
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("Id: {0} Ambiguity: {1:F}", BodyId, Ambiguity);
+        }
+
+        /// <summary>
+        /// Evaluates if a joint in the body is inferred
+        /// </summary>
+        /// <param name="jointType">Joint type to look for</param>
+        /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
+        public bool IsJointInferred(KinectJointType jointType)
+        {
+            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectJointTrackingState.Inferred);
+            return joint != null;
         }
     }
 
@@ -135,7 +162,7 @@ namespace Arges.KinectRemote.Data
     }
 
     /// <summary>
-    /// Body ambiguity flag. Not used on the public version yet.
+    /// Body ambiguity flag.
     /// </summary>
     [ProtoContract, Flags]
     public enum BodyAmbiguity
@@ -146,6 +173,6 @@ namespace Arges.KinectRemote.Data
         MissingLeftArm = 1 << 2,
         MissingRightArm = 1 << 3,
         ShadowOutOfRange = 1 << 4,
-        ShadowLost = 1 << 5,
+        ShadowLost = 1 << 5
     }
 }
