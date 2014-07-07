@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transpor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transmitter", "Arges.KinectRemote.Transmitter\Arges.KinectRemote.Transmitter.csproj", "{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.BodyProcessor", "Arges.KinectRemote.BodyProcessor\Arges.KinectRemote.BodyProcessor.csproj", "{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,16 @@ Global
 		{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}.Release|x64.ActiveCfg = Release|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

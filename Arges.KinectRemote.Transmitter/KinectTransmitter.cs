@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using Arges.KinectRemote.BodyProcessor;
 
 namespace Arges.KinectRemote.Transmitter
 {
@@ -16,6 +17,9 @@ namespace Arges.KinectRemote.Transmitter
 
             Console.WriteLine("Initializing Kinect data transmitter...");
             var publisher = new KinectDataPublisher(ipAddress, exchange, senderId, username, password);
+            publisher.BodyEvaluators.Add(new LeftArmAbiguityEvaluator());
+            publisher.BodyEvaluators.Add(new RightArmAbiguityEvaluator());
+            publisher.BodyEvaluators.Add(new SittingEvaluator());
 
             Console.WriteLine("Press ENTER to exit");
             Console.ReadLine();

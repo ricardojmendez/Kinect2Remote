@@ -8,7 +8,7 @@ using Arges.KinectRemote.Transport;
 
 namespace Arges.KinectRemote.TestConsole
 {
-    class Program
+    static class Program
     {
         static string _exchange;
         static string _ipAddress;
@@ -86,13 +86,15 @@ namespace Arges.KinectRemote.TestConsole
                 Console.WriteLine("Bundle contains {0} bodies", bundle.Bodies.Count);
                 foreach (var body in bundle.Bodies)
                 {
-                    Console.WriteLine("- Body {0}", body.BodyId);
+                    Console.WriteLine("- Body {0}", body);
                     Console.WriteLine("- Hand States. Left {0} (Conf: {1}) Right {2} (Conf: {3})", body.HandLeftState, body.HandLeftConfidence, body.HandRightState, body.HandRightConfidence);
+#if LOG_JOINTS
                     Console.WriteLine("- Joints");
                     foreach (var joint in body.Joints)
                     {
                         Console.WriteLine("  - {0}", joint);
                     }
+#endif
                 }
             }
             else

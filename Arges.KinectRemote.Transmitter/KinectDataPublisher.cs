@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Arges.KinectRemote.BodyProcessor;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
 using Arges.KinectRemote.Sensor;
@@ -21,6 +23,12 @@ namespace Arges.KinectRemote.Transmitter
         public bool BroadcastEnabled { set; get; }
 
         /// <summary>
+        /// List of body processors that we should run each body through 
+        /// before sending it down the wire
+        /// </summary>
+        public List<IBodyEvaluator> BodyEvaluators { get; private set; }
+
+        /// <summary>
         /// Initializes a Kinect Data Publisher
         /// </summary>
         /// <param name="ipAddress">IP Address for the RabbitMQ server</param>
@@ -38,6 +46,7 @@ namespace Arges.KinectRemote.Transmitter
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
+            BodyEvaluators = new List<IBodyEvaluator>();
         }
 
         ~KinectDataPublisher()
@@ -49,7 +58,7 @@ namespace Arges.KinectRemote.Transmitter
         {
             if (BroadcastEnabled && e != null && e.Bodies != null && e.Bodies.Count > 0)
             {
-                ProcessBodies(e.SensorId, e.Bodies);
+                ProcessAndTransmit(e.SensorId, e.Bodies);
             }
         }
 
@@ -58,17 +67,22 @@ namespace Arges.KinectRemote.Transmitter
         /// </summary>
         /// <param name="bodies">List of bodies to send</param>
         /// <param name="sensorId">Device ID for the Kinect sensor</param>
-        void ProcessBodies(string sensorId, List<KinectBodyData> bodies)
+        void ProcessAndTransmit(string sensorId, List<KinectBodyData> bodies)
         {
+            foreach (var evaluator in BodyEvaluators)
+            {
+                foreach (var body in bodies.Where(body => evaluator.ShouldFlagBody(body)))
+                {
+                    body.Ambiguity |= evaluator.FlagToSet;
+                }
+            }
+
             var stuffedBodyBag = new KinectBodyBag
             {
                 SensorId = sensorId,
                 Bodies = bodies
             };
-
-            // We may want to add some object pre-processing here, or 
-            // just let the receivers take care of that.
-
+            
             _messagePublisher.SerializeAndSendObject(stuffedBodyBag);
         }
     }

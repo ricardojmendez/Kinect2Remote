@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using ProtoBuf;
 
@@ -100,6 +101,22 @@ namespace Arges.KinectRemote.Data
                 joint.Position.Z += z;
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format("Id: {0} Ambiguity: {1:F}", BodyId, Ambiguity);
+        }
+
+        /// <summary>
+        /// Evaluates if a joint in the body is inferred
+        /// </summary>
+        /// <param name="jointType">Joint type to look for</param>
+        /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
+        public bool IsJointInferred(KinectJointType jointType)
+        {
+            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectJointTrackingState.Inferred);
+            return joint != null;
+        }
     }
 
 
@@ -145,7 +162,7 @@ namespace Arges.KinectRemote.Data
     }
 
     /// <summary>
-    /// Body ambiguity flag. Not used on the public version yet.
+    /// Body ambiguity flag.
     /// </summary>
     [ProtoContract, Flags]
     public enum BodyAmbiguity
