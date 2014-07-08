@@ -12,6 +12,13 @@ namespace Arges.KinectRemote.Transmitter
     /// Connects to the available Kinect sensors, encodes the body data for publishing
     /// and sends it over the wire serialized.
     /// </summary>
+    /// <remarks>
+    /// Currently part of the Transmitter library. I've considered moving it to
+    /// the Transport library, but that would require adding a dependency on that
+    /// library to Sensor, and I'd rather that remains solely where it's 
+    /// necessary (since the receivers do not need to have any dependency to the
+    /// sensor).
+    /// </remarks>
     public class KinectDataPublisher
     {
         readonly MessagePublisherBase _messagePublisher;
