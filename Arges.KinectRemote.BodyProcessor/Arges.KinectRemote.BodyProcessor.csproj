@@ -38,10 +38,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBodyEvaluator.cs" />
-    <Compile Include="LeftArmAbiguityEvaluator.cs" />
-    <Compile Include="RightArmAmbiguityEvaluator.cs" />
-    <Compile Include="SittingEvaluator.cs" />
+    <Compile Include="IBodyProcessor.cs" />
+    <Compile Include="LeftArmAbiguityProcessor.cs" />
+    <Compile Include="RightArmAmbiguityProcessor.cs" />
+    <Compile Include="SittingProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

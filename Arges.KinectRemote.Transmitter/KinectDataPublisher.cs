@@ -38,7 +38,7 @@ namespace Arges.KinectRemote.Transmitter
         /// List of body processors that we should run each body through 
         /// before sending it down the wire
         /// </summary>
-        public List<IBodyEvaluator> BodyEvaluators { get; private set; }
+        public List<IBodyProcessor> BodyEvaluators { get; private set; }
 
         /// <summary>
         /// Initializes a Kinect Data Publisher
@@ -58,7 +58,7 @@ namespace Arges.KinectRemote.Transmitter
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
-            BodyEvaluators = new List<IBodyEvaluator>();
+            BodyEvaluators = new List<IBodyProcessor>();
         }
 
         ~KinectDataPublisher()
@@ -85,9 +85,9 @@ namespace Arges.KinectRemote.Transmitter
         {
             foreach (var evaluator in BodyEvaluators)
             {
-                foreach (var body in bodies.Where(body => evaluator.ShouldFlagBody(body)))
+                foreach (var body in bodies)
                 {
-                    body.Ambiguity |= evaluator.FlagToSet;
+                    evaluator.ProcessBody(body);
                 }
             }
 
