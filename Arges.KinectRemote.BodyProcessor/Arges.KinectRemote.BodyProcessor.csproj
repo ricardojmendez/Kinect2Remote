@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ABodyProcessor.cs" />
     <Compile Include="IBodyProcessor.cs" />
     <Compile Include="LeftArmAbiguityProcessor.cs" />
     <Compile Include="RightArmAmbiguityProcessor.cs" />

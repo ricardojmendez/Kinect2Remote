@@ -17,9 +17,9 @@ namespace Arges.KinectRemote.Transmitter
 
             Console.WriteLine("Initializing Kinect data transmitter...");
             var publisher = new KinectDataPublisher(ipAddress, exchange, senderId, username, password);
-            publisher.BodyEvaluators.Add(new LeftArmAbiguityProcessor());
-            publisher.BodyEvaluators.Add(new RightArmAbiguityProcessor());
-            publisher.BodyEvaluators.Add(new SittingProcessor());
+            publisher.BodyProcessors.Add(new LeftArmAbiguityProcessor());
+            publisher.BodyProcessors.Add(new RightArmAbiguityProcessor());
+            publisher.BodyProcessors.Add(new SittingProcessor());
 
             Console.WriteLine("Press ENTER to exit");
             Console.ReadLine();

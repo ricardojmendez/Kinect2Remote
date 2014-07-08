@@ -5,7 +5,7 @@ using Arges.KinectRemote.Data;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
-    public class SittingProcessor: IBodyProcessor
+    public class SittingProcessor: ABodyProcessor
     {
         /// <summary>
         /// We calculate the hip-to-head and knee-to-head ratios, and
@@ -32,7 +32,7 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         /// <param name="body">Body to evaluate</param>
         /// <returns>True if the body is sitting, false if otherwise</returns>
-        bool IBodyProcessor.ProcessBody(KinectBodyData body)
+        public override bool ProcessBody(KinectBodyData body)
         {
             var leftHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipLeft);
             var rightHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipRight);

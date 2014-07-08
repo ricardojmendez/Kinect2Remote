@@ -3,9 +3,9 @@ using Arges.KinectRemote.Data;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
-    public class LeftArmAbiguityProcessor: IBodyProcessor
+    public class LeftArmAbiguityProcessor: ABodyProcessor
     {
-        bool IBodyProcessor.ProcessBody(KinectBodyData body)
+        public override bool ProcessBody(KinectBodyData body)
         {
             // If at least three of the arm joints are inferred, as assume there's no arm
             var inferredCount = body.Joints.Count(x =>

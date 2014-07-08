@@ -2,6 +2,11 @@
 
 namespace Arges.KinectRemote.BodyProcessor
 {
+    /// <summary>
+    /// Base body processor interface. Might be deprecated in the near
+    /// future.
+    /// </summary>
+    /// <see cref="ABodyProcessor"/>
     public interface IBodyProcessor
     {
         /// <summary>

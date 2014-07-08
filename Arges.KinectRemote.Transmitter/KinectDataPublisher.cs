@@ -38,7 +38,7 @@ namespace Arges.KinectRemote.Transmitter
         /// List of body processors that we should run each body through 
         /// before sending it down the wire
         /// </summary>
-        public List<IBodyProcessor> BodyEvaluators { get; private set; }
+        public List<ABodyProcessor> BodyProcessors { get; private set; }
 
         /// <summary>
         /// Initializes a Kinect Data Publisher
@@ -58,7 +58,7 @@ namespace Arges.KinectRemote.Transmitter
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;
-            BodyEvaluators = new List<IBodyProcessor>();
+            BodyProcessors = new List<ABodyProcessor>();
         }
 
         ~KinectDataPublisher()
@@ -83,12 +83,9 @@ namespace Arges.KinectRemote.Transmitter
         /// <param name="sensorId">Device ID for the Kinect sensor</param>
         void ProcessAndTransmit(string sensorId, List<KinectBodyData> bodies)
         {
-            foreach (var evaluator in BodyEvaluators)
+            foreach (var processor in BodyProcessors)
             {
-                foreach (var body in bodies)
-                {
-                    evaluator.ProcessBody(body);
-                }
+                processor.ProcessBodies(bodies);
             }
 
             var stuffedBodyBag = new KinectBodyBag
