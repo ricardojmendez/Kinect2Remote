@@ -1,10 +1,11 @@
-﻿using System;
+﻿//#define LOG_SITTING
+using System;
 using System.Linq;
 using Arges.KinectRemote.Data;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
-    public class SittingEvaluator: IBodyEvaluator
+    public class SittingProcessor: ABodyProcessor
     {
         /// <summary>
         /// We calculate the hip-to-head and knee-to-head ratios, and
@@ -19,15 +20,10 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         public float SensorHeight { get; private set; }
 
-        public SittingEvaluator(float sensorHeight = 2, float minProportion = 0.1f)
+        public SittingProcessor(float sensorHeight = 2, float minProportion = 0.1f)
         {
             MinProportion = minProportion;
             SensorHeight = sensorHeight;
-        }
-
-        BodyAmbiguity IBodyEvaluator.FlagToSet
-        {
-            get { return BodyAmbiguity.Sitting; }
         }
 
         /// <summary>
@@ -36,7 +32,7 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         /// <param name="body">Body to evaluate</param>
         /// <returns>True if the body is sitting, false if otherwise</returns>
-        bool IBodyEvaluator.ShouldFlagBody(KinectBodyData body)
+        public override bool ProcessBody(KinectBodyData body)
         {
             var leftHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipLeft);
             var rightHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipRight);
@@ -51,15 +47,19 @@ namespace Arges.KinectRemote.BodyProcessor
                 return false;
             }
 
-
             var headHeight = head.Position.Y + SensorHeight;
             var averageHip = (leftHip.Position.Y + rightHip.Position.Y + SensorHeight*2)/2;
             var hipTohead = averageHip/headHeight;
             var leftToHead = (leftKnee.Position.Y + SensorHeight)/headHeight;
             var rightToHead = (rightKnee.Position.Y + SensorHeight)/headHeight;
 
-            bool isSitting = Math.Abs(leftToHead - hipTohead) < MinProportion &&
-                             Math.Abs(rightToHead - hipTohead) < MinProportion;
+            var isSitting = Math.Abs(leftToHead - hipTohead) < MinProportion &&
+                            Math.Abs(rightToHead - hipTohead) < MinProportion;
+
+            if (isSitting)
+            {
+                body.Ambiguity |= BodyAmbiguity.Sitting;
+            }
 
 #if LOG_SITTING
             if (isSitting)

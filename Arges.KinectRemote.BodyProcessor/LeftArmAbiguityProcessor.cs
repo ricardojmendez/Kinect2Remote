@@ -3,14 +3,9 @@ using Arges.KinectRemote.Data;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
-    public class LeftArmAbiguityEvaluator: IBodyEvaluator
+    public class LeftArmAbiguityProcessor: ABodyProcessor
     {
-        BodyAmbiguity IBodyEvaluator.FlagToSet
-        {
-            get { return BodyAmbiguity.MissingLeftArm; }
-        }
-
-        bool IBodyEvaluator.ShouldFlagBody(KinectBodyData body)
+        public override bool ProcessBody(KinectBodyData body)
         {
             // If at least three of the arm joints are inferred, as assume there's no arm
             var inferredCount = body.Joints.Count(x =>
@@ -20,7 +15,13 @@ namespace Arges.KinectRemote.BodyProcessor
                      x.JointType == KinectJointType.HandLeft ||
                      x.JointType == KinectJointType.HandTipLeft ||
                      x.JointType == KinectJointType.ThumbLeft));
-            return inferredCount >= 4; 
+
+            var isMissing = inferredCount >= 4;
+            if (isMissing)
+            {
+                body.Ambiguity |= BodyAmbiguity.MissingLeftArm;
+            }
+            return isMissing;
         }
     }
 }
