@@ -14,5 +14,11 @@ namespace Arges.KinectRemote.Data
         public float Z;
         [ProtoMember(4)]
         public float W;
+
+        public override string ToString()
+        {
+            return string.Format("({0}, {1}, {2}, {3})", X, Y, Z, W);
+        }
+
     }
 }
