@@ -137,7 +137,7 @@ namespace Arges.KinectRemote.Sensor
                         Z = nativeJoint.Position.Z
                     },
                     JointType = ((KinectJointType)(int)nativeJoint.JointType),
-                    Rotation = new KinectVector4
+                    Orientation = new KinectVector4
                     {
                         W = orientation.W,
                         X = orientation.X,

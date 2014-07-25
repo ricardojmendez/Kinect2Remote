@@ -28,10 +28,10 @@ namespace Arges.KinectRemote.Data
         public KinectJointType JointType;
 
         /// <summary>
-        /// Hierarchical Rotation of the joint
+        /// Hierarchical Orientation of the joint
         /// </summary>
         [ProtoMember(4)]
-        public KinectVector4 Rotation;
+        public KinectVector4 Orientation;
 
         public static bool IsJointMirrorable(int jointIndex)
         {
