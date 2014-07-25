@@ -86,6 +86,17 @@ namespace Arges.KinectRemote.Data
 
 
         /// <summary>
+        /// Indexes the joints by KinectJointType
+        /// </summary>
+        /// <param name="jointType">Joint type</param>
+        /// <returns>Corresponding KinectJoint</returns>
+        public KinectJoint this[KinectJointType jointType]
+        {
+            get { return Joints[(int) jointType];  }
+            set { Joints[(int) jointType] = value; }
+        }
+
+        /// <summary>
         /// Offsets joints to a particular distance.
         /// </summary>
         /// <param name="x">X offset</param>
