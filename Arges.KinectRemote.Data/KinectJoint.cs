@@ -94,7 +94,7 @@ namespace Arges.KinectRemote.Data
 
         public override string ToString()
         {
-            return string.Format("KinectJoint {0} {1} ({2},{3},{4})", JointType, TrackingState, Position.X, Position.Y, Position.Z);
+            return string.Format("KinectJoint {0} {1} {2}", JointType, TrackingState, Position);
         }
 
     }
