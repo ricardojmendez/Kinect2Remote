@@ -84,7 +84,7 @@ namespace Arges.KinectRemote.Data
 
         public static bool IsJointMirrorable(int jointIndex)
         {
-            return jointIndex != GetSkeletonMirroredJoint(jointIndex);
+            return jointIndex != GetMirroredJoint(jointIndex);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Arges.KinectRemote.Data
         /// </summary>
         /// <param name="jointIndex">Joint to return the mirror for</param>
         /// <returns>Mirrored joint index, or the same index if it's not mirrorable</returns>
-        public static int GetSkeletonMirroredJoint(int jointIndex)
+        public static int GetMirroredJoint(int jointIndex)
         {
             switch (jointIndex)
             {

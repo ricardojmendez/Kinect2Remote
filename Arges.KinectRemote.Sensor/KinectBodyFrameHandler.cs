@@ -122,10 +122,10 @@ namespace Arges.KinectRemote.Sensor
             int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;
             d.Joints = new KinectJoint[jointsCount];
 
-            for (int i = 0; i < jointsCount; i++)
+            for (var i = 0; i < jointsCount; i++)
             {
-                var nativeJoint = body.Joints[(JointType)i];
-                var orientation = body.JointOrientations[(JointType)i].Orientation;
+                var nativeJoint = body.Joints[(JointType) i];
+                var orientation = body.JointOrientations[(JointType) i].Orientation;
 
                 var joint = new KinectJoint
                 {
