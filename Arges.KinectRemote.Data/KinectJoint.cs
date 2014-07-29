@@ -30,6 +30,16 @@ namespace Arges.KinectRemote.Data
         /// <summary>
         /// Hierarchical Orientation of the joint
         /// </summary>
+        /// <remarks>
+        /// This is *not* the joint's rotation, it actually describes
+        /// a look vector from the parent joint to this one. For example:
+        /// 
+        /// leftShoulder.Orientation.ToQuaternion() * Vector3.up
+        /// 
+        /// will equal a normalized
+        /// 
+        /// leftShoulder.Position.ToVector3() - spineShoulder.Position.ToVector3();
+        /// </remarks>
         [ProtoMember(4)]
         public KinectVector4 Orientation;
 
