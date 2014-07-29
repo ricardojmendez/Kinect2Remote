@@ -1,5 +1,6 @@
 ﻿using System;
 using ProtoBuf;
+using System.Collections.Generic;
 
 namespace Arges.KinectRemote.Data
 {
@@ -9,6 +10,44 @@ namespace Arges.KinectRemote.Data
     [Serializable, ProtoContract]
     public class KinectJoint
     {
+        /// <summary>
+        /// Dictionary storing (child, parent) joint relationships as (key, value) pairs
+        /// </summary>
+        public static Dictionary<KinectJointType, KinectJointType> JointParent = new Dictionary<KinectJointType, KinectJointType>()
+        {
+            { KinectJointType.FootLeft, KinectJointType.AnkleLeft },
+            { KinectJointType.AnkleLeft, KinectJointType.KneeLeft },
+            { KinectJointType.KneeLeft, KinectJointType.HipLeft },
+            { KinectJointType.HipLeft, KinectJointType.SpineBase },
+        
+            { KinectJointType.FootRight, KinectJointType.AnkleRight },
+            { KinectJointType.AnkleRight, KinectJointType.KneeRight },
+            { KinectJointType.KneeRight, KinectJointType.HipRight },
+            { KinectJointType.HipRight, KinectJointType.SpineBase },
+        
+            { KinectJointType.HandTipLeft, KinectJointType.HandLeft },
+            { KinectJointType.ThumbLeft, KinectJointType.HandLeft },
+            { KinectJointType.HandLeft, KinectJointType.WristLeft },
+            { KinectJointType.WristLeft, KinectJointType.ElbowLeft },
+            { KinectJointType.ElbowLeft, KinectJointType.ShoulderLeft },
+            { KinectJointType.ShoulderLeft, KinectJointType.SpineShoulder },
+        
+            { KinectJointType.HandTipRight, KinectJointType.HandRight },
+            { KinectJointType.ThumbRight, KinectJointType.HandRight },
+            { KinectJointType.HandRight, KinectJointType.WristRight },
+            { KinectJointType.WristRight, KinectJointType.ElbowRight },
+            { KinectJointType.ElbowRight, KinectJointType.ShoulderRight },
+            { KinectJointType.ShoulderRight, KinectJointType.SpineShoulder },
+        
+            { KinectJointType.SpineMid, KinectJointType.SpineBase },
+            { KinectJointType.SpineShoulder, KinectJointType.SpineMid },
+            { KinectJointType.Neck, KinectJointType.SpineShoulder },
+            { KinectJointType.Head, KinectJointType.Neck },
+
+            { KinectJointType.SpineBase, KinectJointType.SpineBase },
+        };
+
+
         /// <summary>
         /// Joint position
         /// </summary>
