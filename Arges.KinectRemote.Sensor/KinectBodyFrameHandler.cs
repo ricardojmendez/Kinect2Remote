@@ -113,6 +113,7 @@ namespace Arges.KinectRemote.Sensor
             // Add an identifier using the sensor ID to keep the skeleton entity unique across all devices.
             var d = new KinectBodyData { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
 
+
             // All six bodies are fully tracked. Wee!
             var jointCount = Enum.GetNames(typeof(KinectJointType)).Length;
             d.Joints = new KinectJoint[jointCount];
@@ -142,6 +143,8 @@ namespace Arges.KinectRemote.Sensor
                 };
                 d.Joints[i] = joint;
             }
+            d.Lean = new KinectPoint { X = body.Lean.X, Y = body.Lean.Y };
+            d.LeanTrackingState = (KinectTrackingState) (int) body.LeanTrackingState;
 
             // Record hand states
             d.HandLeftState = (KinectHandState)(int)body.HandLeftState;

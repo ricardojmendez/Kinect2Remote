@@ -86,6 +86,20 @@ namespace Arges.KinectRemote.Data
 
 
         /// <summary>
+        /// Lean amounts for the body. Left/Right corresponds to the X,
+        /// Forward/Back to the Y.
+        /// </summary>
+        [ProtoMember(9)]
+        public KinectPoint Lean;
+
+        /// <summary>
+        /// Lean tracking state.
+        /// </summary>
+        [ProtoMember(10)]
+        public KinectTrackingState LeanTrackingState;
+
+
+        /// <summary>
         /// Indexes the joints by KinectJointType
         /// </summary>
         /// <param name="jointType">Joint type</param>
