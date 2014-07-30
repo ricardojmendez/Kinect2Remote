@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Kinect;
 using Arges.KinectRemote.Data;
@@ -13,11 +12,12 @@ namespace Arges.KinectRemote.Sensor
     {
 
         /// <summary>
-        /// List of known body frame readers. Will for now contain only
-        /// one value, since the Kinect2 SDK does not yet support multiple
-        /// sensors.
+        /// Body frame reader
         /// </summary>
-        public List<BodyFrameReader> BodyFrameReaders { get; private set; }
+        /// <remarks>
+        /// The Kinect2 SDK only supports one sensor at a time
+        /// </remarks>
+        public BodyFrameReader FrameReader { get; private set; }
 
         public Body[] Bodies { get; private set; }
 
@@ -34,7 +34,6 @@ namespace Arges.KinectRemote.Sensor
 
         public KinectBodyFrameHandler()
         {
-            BodyFrameReaders = new List<BodyFrameReader>();
             Bodies = new Body[6];
             SensorId = Guid.NewGuid().ToString("d");
         }
@@ -45,18 +44,17 @@ namespace Arges.KinectRemote.Sensor
         public event EventHandler<BodyFrameReadyEventArgs> BodyFrameReady;
 
         /// <summary>
-        /// Enables tracking and starts all sensors
+        /// Enables tracking and starts the sensor, if there is one attached
         /// </summary>
-        public void StartSensor()
+        public void OpenSensor()
         {
             var sensor = KinectSensor.GetDefault();
             Console.WriteLine("- Opening sensor: {0}", SensorId);
 
             sensor.Open();
 
-            var reader = sensor.BodyFrameSource.OpenReader();
-            reader.FrameArrived += OnFrameArrived;
-            BodyFrameReaders.Add(reader);
+            FrameReader = sensor.BodyFrameSource.OpenReader();
+            FrameReader.FrameArrived += OnFrameArrived;            
         }
 
         /// <summary>
@@ -90,15 +88,12 @@ namespace Arges.KinectRemote.Sensor
         }
 
         /// <summary>
-        /// Stops all sensors
+        /// Closes the current sensor and disposes the body frame reader
         /// </summary>
-        public void StopAllSensors()
+        public void CloseSensor()
         {
-            foreach (var reader in BodyFrameReaders)
-            {
-                reader.Dispose();
-            }
-            BodyFrameReaders.Clear();
+            FrameReader.Dispose();
+            FrameReader = null;
 
             Console.WriteLine("Closing sensor");
             KinectSensor.GetDefault().Close();
@@ -119,10 +114,10 @@ namespace Arges.KinectRemote.Sensor
             var d = new KinectBodyData { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
 
             // All six bodies are fully tracked. Wee!
-            int jointsCount = Enum.GetNames(typeof(KinectJointType)).Length;
-            d.Joints = new KinectJoint[jointsCount];
+            var jointCount = Enum.GetNames(typeof(KinectJointType)).Length;
+            d.Joints = new KinectJoint[jointCount];
 
-            for (var i = 0; i < jointsCount; i++)
+            for (var i = 0; i < jointCount; i++)
             {
                 var nativeJoint = body.Joints[(JointType) i];
                 var orientation = body.JointOrientations[(JointType) i].Orientation;
