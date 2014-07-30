@@ -53,7 +53,7 @@ namespace Arges.KinectRemote.Transmitter
             _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
             Console.WriteLine("Starting all sensors");
-            _kinectRuntime.StartSensor();
+            _kinectRuntime.OpenSensor();
             _kinectRuntime.BodyFrameReady += OnBodyFrameReady;
             Console.WriteLine("All Kinect Sensors are started.");
 
@@ -63,7 +63,7 @@ namespace Arges.KinectRemote.Transmitter
 
         ~KinectDataPublisher()
         {
-            _kinectRuntime.StopAllSensors();
+            _kinectRuntime.CloseSensor();
         }
 
         void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
