@@ -9,7 +9,7 @@ namespace Arges.KinectRemote.BodyProcessor
         {
             // If at least three of the arm joints are inferred, as assume there's no arm
             var inferredCount = body.Joints.Count(x =>
-                    x.TrackingState == KinectJointTrackingState.Inferred &&
+                    x.TrackingState == KinectTrackingState.Inferred &&
                     (x.JointType == KinectJointType.ElbowLeft ||
                      x.JointType == KinectJointType.WristLeft ||
                      x.JointType == KinectJointType.HandLeft ||

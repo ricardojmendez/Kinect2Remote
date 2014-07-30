@@ -125,7 +125,7 @@ namespace Arges.KinectRemote.Data
         /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
         public bool IsJointInferred(KinectJointType jointType)
         {
-            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectJointTrackingState.Inferred);
+            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
             return joint != null;
         }
     }

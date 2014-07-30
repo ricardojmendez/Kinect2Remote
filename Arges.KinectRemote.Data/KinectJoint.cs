@@ -58,7 +58,7 @@ namespace Arges.KinectRemote.Data
         /// The tracking state of this joint
         /// </summary>
         [ProtoMember(2)]
-        public KinectJointTrackingState TrackingState;
+        public KinectTrackingState TrackingState;
 
         /// <summary>
         /// Type of the joint
@@ -149,12 +149,12 @@ namespace Arges.KinectRemote.Data
     }
 
     /// <summary>
-    /// Joint tracking state
+    /// Tracking state, used for both joints and lean
     /// </summary>
-    public enum KinectJointTrackingState{
-        NotTracked,
-        Inferred,
-        Tracked,
+    public enum KinectTrackingState{
+        NotTracked = 0,
+        Inferred = 1,
+        Tracked = 2,
     }
 
 
