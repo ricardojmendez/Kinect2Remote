@@ -5,7 +5,7 @@ namespace Arges.KinectRemote.BodyProcessor
 {
     public class LeftArmAbiguityProcessor: ABodyProcessor
     {
-        public override bool ProcessBody(KinectBodyData body)
+        public override bool ProcessBody(KinectBody body)
         {
             // If at least three of the arm joints are inferred, as assume there's no arm
             var inferredCount = body.Joints.Count(x =>

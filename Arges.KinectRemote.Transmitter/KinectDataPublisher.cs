@@ -81,7 +81,7 @@ namespace Arges.KinectRemote.Transmitter
         /// </summary>
         /// <param name="bodies">List of bodies to send</param>
         /// <param name="sensorId">Device ID for the Kinect sensor</param>
-        void ProcessAndTransmit(string sensorId, List<KinectBodyData> bodies)
+        void ProcessAndTransmit(string sensorId, List<KinectBody> bodies)
         {
             foreach (var processor in BodyProcessors)
             {

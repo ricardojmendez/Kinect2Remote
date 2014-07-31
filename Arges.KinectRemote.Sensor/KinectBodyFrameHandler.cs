@@ -102,16 +102,16 @@ namespace Arges.KinectRemote.Sensor
 
         /// <summary>
         /// Maps the information received for a Body from the Kinect to a
-        /// KinectBodyData we can serialize and send over the wire.
+        /// KinectBody we can serialize and send over the wire.
         /// </summary>
         /// <param name="body">Body to map</param>
         /// <param name="sensorId">Sensor ID, or any other value being used as the device connection Id</param>
-        /// <returns>Mapped KinectBodyData containing the body information, 
+        /// <returns>Mapped KinectBody containing the body information, 
         /// an identifier, and othe processed data</returns>
-        private static KinectBodyData MapBody(Body body, string sensorId)
+        private static KinectBody MapBody(Body body, string sensorId)
         {
             // Add an identifier using the sensor ID to keep the skeleton entity unique across all devices.
-            var d = new KinectBodyData { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
+            var d = new KinectBody { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
 
 
             // All six bodies are fully tracked. Wee!

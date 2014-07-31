@@ -16,6 +16,6 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         /// <param name="body">Body to evaluate</param>
         /// <returns>True if the body was altered, false if otherwise</returns>
-        bool ProcessBody(KinectBodyData body);
+        bool ProcessBody(KinectBody body);
     }
 }

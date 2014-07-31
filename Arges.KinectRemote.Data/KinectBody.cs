@@ -21,14 +21,14 @@ namespace Arges.KinectRemote.Data
         /// List of tracked skeletons
         /// </summary>
         [ProtoMember(2)]
-        public List<KinectBodyData> Bodies;
+        public List<KinectBody> Bodies;
     }
 
     /// <summary>
     /// Encapsulates data for a single body
     /// </summary>
     [Serializable, ProtoContract]
-    public class KinectBodyData
+    public class KinectBody
     {
 
         /// <summary>
