@@ -1,5 +1,6 @@
 ﻿using System;
 using ProtoBuf;
+using System.Collections.Generic;
 
 namespace Arges.KinectRemote.Data
 {
@@ -10,6 +11,44 @@ namespace Arges.KinectRemote.Data
     public class KinectJoint
     {
         /// <summary>
+        /// Dictionary storing (child, parent) joint relationships as (key, value) pairs
+        /// </summary>
+        public static Dictionary<KinectJointType, KinectJointType> JointParent = new Dictionary<KinectJointType, KinectJointType>()
+        {
+            { KinectJointType.FootLeft, KinectJointType.AnkleLeft },
+            { KinectJointType.AnkleLeft, KinectJointType.KneeLeft },
+            { KinectJointType.KneeLeft, KinectJointType.HipLeft },
+            { KinectJointType.HipLeft, KinectJointType.SpineBase },
+        
+            { KinectJointType.FootRight, KinectJointType.AnkleRight },
+            { KinectJointType.AnkleRight, KinectJointType.KneeRight },
+            { KinectJointType.KneeRight, KinectJointType.HipRight },
+            { KinectJointType.HipRight, KinectJointType.SpineBase },
+        
+            { KinectJointType.HandTipLeft, KinectJointType.HandLeft },
+            { KinectJointType.ThumbLeft, KinectJointType.HandLeft },
+            { KinectJointType.HandLeft, KinectJointType.WristLeft },
+            { KinectJointType.WristLeft, KinectJointType.ElbowLeft },
+            { KinectJointType.ElbowLeft, KinectJointType.ShoulderLeft },
+            { KinectJointType.ShoulderLeft, KinectJointType.SpineShoulder },
+        
+            { KinectJointType.HandTipRight, KinectJointType.HandRight },
+            { KinectJointType.ThumbRight, KinectJointType.HandRight },
+            { KinectJointType.HandRight, KinectJointType.WristRight },
+            { KinectJointType.WristRight, KinectJointType.ElbowRight },
+            { KinectJointType.ElbowRight, KinectJointType.ShoulderRight },
+            { KinectJointType.ShoulderRight, KinectJointType.SpineShoulder },
+        
+            { KinectJointType.SpineMid, KinectJointType.SpineBase },
+            { KinectJointType.SpineShoulder, KinectJointType.SpineMid },
+            { KinectJointType.Neck, KinectJointType.SpineShoulder },
+            { KinectJointType.Head, KinectJointType.Neck },
+
+            { KinectJointType.SpineBase, KinectJointType.SpineBase },
+        };
+
+
+        /// <summary>
         /// Joint position
         /// </summary>
         [ProtoMember(1)] 
@@ -19,7 +58,7 @@ namespace Arges.KinectRemote.Data
         /// The tracking state of this joint
         /// </summary>
         [ProtoMember(2)]
-        public KinectJointTrackingState TrackingState;
+        public KinectTrackingState TrackingState;
 
         /// <summary>
         /// Type of the joint
@@ -28,14 +67,24 @@ namespace Arges.KinectRemote.Data
         public KinectJointType JointType;
 
         /// <summary>
-        /// Hierarchical Rotation of the joint
+        /// Hierarchical Orientation of the joint
         /// </summary>
+        /// <remarks>
+        /// This is *not* the joint's rotation, it actually describes
+        /// a look vector from the parent joint to this one. For example:
+        /// 
+        /// leftShoulder.Orientation.ToQuaternion() * Vector3.up
+        /// 
+        /// will equal a normalized
+        /// 
+        /// leftShoulder.Position.ToVector3() - spineShoulder.Position.ToVector3();
+        /// </remarks>
         [ProtoMember(4)]
-        public KinectVector4 Rotation;
+        public KinectVector4 Orientation;
 
         public static bool IsJointMirrorable(int jointIndex)
         {
-            return jointIndex != GetSkeletonMirroredJoint(jointIndex);
+            return jointIndex != GetMirroredJoint(jointIndex);
         }
 
         /// <summary>
@@ -43,7 +92,7 @@ namespace Arges.KinectRemote.Data
         /// </summary>
         /// <param name="jointIndex">Joint to return the mirror for</param>
         /// <returns>Mirrored joint index, or the same index if it's not mirrorable</returns>
-        public static int GetSkeletonMirroredJoint(int jointIndex)
+        public static int GetMirroredJoint(int jointIndex)
         {
             switch (jointIndex)
             {
@@ -94,18 +143,18 @@ namespace Arges.KinectRemote.Data
 
         public override string ToString()
         {
-            return string.Format("KinectJoint {0} {1} ({2},{3},{4})", JointType, TrackingState, Position.X, Position.Y, Position.Z);
+            return string.Format("KinectJoint {0} {1} {2}", JointType, TrackingState, Position);
         }
 
     }
 
     /// <summary>
-    /// Joint tracking state
+    /// Tracking state, used for both joints and lean
     /// </summary>
-    public enum KinectJointTrackingState{
-        NotTracked,
-        Inferred,
-        Tracked,
+    public enum KinectTrackingState{
+        NotTracked = 0,
+        Inferred = 1,
+        Tracked = 2,
     }
 
 

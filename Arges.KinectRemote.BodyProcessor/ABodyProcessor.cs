@@ -12,13 +12,13 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         /// <param name="body">Body to process</param>
         /// <returns>Returns true if the body was altered</returns>
-        public abstract bool ProcessBody(Data.KinectBodyData body);
+        public abstract bool ProcessBody(Data.KinectBody body);
 
         /// <summary>
         /// Processes a list of bodies
         /// </summary>
         /// <param name="bodies">Enumerable of bodies to process</param>
-        public virtual void ProcessBodies(IEnumerable<Data.KinectBodyData> bodies)
+        public virtual void ProcessBodies(IEnumerable<Data.KinectBody> bodies)
         {
             foreach (var body in bodies)
             {

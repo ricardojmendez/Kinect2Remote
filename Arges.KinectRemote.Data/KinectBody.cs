@@ -21,14 +21,14 @@ namespace Arges.KinectRemote.Data
         /// List of tracked skeletons
         /// </summary>
         [ProtoMember(2)]
-        public List<KinectBodyData> Bodies;
+        public List<KinectBody> Bodies;
     }
 
     /// <summary>
     /// Encapsulates data for a single body
     /// </summary>
     [Serializable, ProtoContract]
-    public class KinectBodyData
+    public class KinectBody
     {
 
         /// <summary>
@@ -86,6 +86,31 @@ namespace Arges.KinectRemote.Data
 
 
         /// <summary>
+        /// Lean amounts for the body. Left/Right corresponds to the X,
+        /// Forward/Back to the Y.
+        /// </summary>
+        [ProtoMember(9)]
+        public KinectPoint Lean;
+
+        /// <summary>
+        /// Lean tracking state.
+        /// </summary>
+        [ProtoMember(10)]
+        public KinectTrackingState LeanTrackingState;
+
+
+        /// <summary>
+        /// Indexes the joints by KinectJointType
+        /// </summary>
+        /// <param name="jointType">Joint type</param>
+        /// <returns>Corresponding KinectJoint</returns>
+        public KinectJoint this[KinectJointType jointType]
+        {
+            get { return Joints[(int) jointType];  }
+            set { Joints[(int) jointType] = value; }
+        }
+
+        /// <summary>
         /// Offsets joints to a particular distance.
         /// </summary>
         /// <param name="x">X offset</param>
@@ -114,7 +139,7 @@ namespace Arges.KinectRemote.Data
         /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
         public bool IsJointInferred(KinectJointType jointType)
         {
-            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectJointTrackingState.Inferred);
+            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
             return joint != null;
         }
     }
