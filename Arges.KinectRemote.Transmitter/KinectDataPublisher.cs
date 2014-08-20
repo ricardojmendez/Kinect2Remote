@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Arges.KinectRemote.BodyProcessor;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
@@ -22,7 +21,7 @@ namespace Arges.KinectRemote.Transmitter
     public class KinectDataPublisher
     {
         readonly MessagePublisherBase _messagePublisher;
-        readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
+        readonly KinectSensorManager _kinectRuntime = new KinectSensorManager();
 
         /// <summary>
         /// Last number of bodies sent
@@ -53,8 +52,11 @@ namespace Arges.KinectRemote.Transmitter
             _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
             Console.WriteLine("Starting all sensors");
+
+            var frameHandler = new KinectBodyFrameHandler(_kinectRuntime);
+            frameHandler.BodyFrameReady += OnBodyFrameReady;
+            _kinectRuntime.AddFrameHandler(frameHandler);
             _kinectRuntime.OpenSensor();
-            _kinectRuntime.BodyFrameReady += OnBodyFrameReady;
             Console.WriteLine("All Kinect Sensors are started.");
 
             BroadcastEnabled = true;

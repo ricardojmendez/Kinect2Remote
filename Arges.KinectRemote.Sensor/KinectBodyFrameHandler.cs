@@ -8,34 +8,19 @@ namespace Arges.KinectRemote.Sensor
     /// <summary>
     /// Defines a simple runtime class that acts as a wrapper for the KinectSDK body interface
     /// </summary>
-    public class KinectBodyFrameHandler
+    public class KinectBodyFrameHandler: AFrameHandler
     {
 
         /// <summary>
         /// Body frame reader
         /// </summary>
-        /// <remarks>
-        /// The Kinect2 SDK only supports one sensor at a time
-        /// </remarks>
         public BodyFrameReader FrameReader { get; private set; }
 
         public Body[] Bodies { get; private set; }
 
-        /// <summary>
-        /// Unique sensor ID generated at runtime, so that remotes can tell 
-        /// which sensor the data is coming from
-        /// </summary>
-        /// <remarks>
-        /// This is likely to be a temporary fix while Microsoft implements 
-        /// a sensor id. If they do not, we can expand it to be a value that
-        /// can be set by the developer.
-        /// </remarks>
-        public string SensorId { get; private set; }
-
-        public KinectBodyFrameHandler()
+        public KinectBodyFrameHandler(KinectSensorManager manager): base(manager)
         {
             Bodies = new Body[6];
-            SensorId = Guid.NewGuid().ToString("d");
         }
 
         /// <summary>
@@ -43,19 +28,18 @@ namespace Arges.KinectRemote.Sensor
         /// </summary>
         public event EventHandler<BodyFrameReadyEventArgs> BodyFrameReady;
 
-        /// <summary>
-        /// Enables tracking and starts the sensor, if there is one attached
-        /// </summary>
-        public void OpenSensor()
+        internal override void OnStart()
         {
-            var sensor = KinectSensor.GetDefault();
-            Console.WriteLine("- Opening sensor: {0}", SensorId);
-
-            sensor.Open();
-
-            FrameReader = sensor.BodyFrameSource.OpenReader();
-            FrameReader.FrameArrived += OnFrameArrived;            
+            FrameReader = Manager.Sensor.BodyFrameSource.OpenReader();
+            FrameReader.FrameArrived += OnFrameArrived;
         }
+
+        internal override void OnStop()
+        {
+            FrameReader.Dispose();
+            FrameReader = null;
+        }
+
 
         /// <summary>
         /// Handles a new body frame by creating a list of mapped bodies and sending it over the wire
@@ -80,25 +64,13 @@ namespace Arges.KinectRemote.Sensor
                 frame.GetAndRefreshBodyData(Bodies);
 
                 var resultingBodies = Bodies.Where(b => b.IsTracked)
-                    .Select(body => MapBody(body, SensorId))
+                    .Select(body => MapBody(body, Manager.SensorId))
                     .ToList();
 
-                BodyFrameReady(this, new BodyFrameReadyEventArgs(SensorId, resultingBodies));
+                BodyFrameReady(this, new BodyFrameReadyEventArgs(Manager.SensorId, resultingBodies));
             }
         }
 
-        /// <summary>
-        /// Closes the current sensor and disposes the body frame reader
-        /// </summary>
-        public void CloseSensor()
-        {
-            FrameReader.Dispose();
-            FrameReader = null;
-
-            Console.WriteLine("Closing sensor");
-            KinectSensor.GetDefault().Close();
-            Console.WriteLine("Closed sensor");
-        }
 
         /// <summary>
         /// Maps the information received for a Body from the Kinect to a
