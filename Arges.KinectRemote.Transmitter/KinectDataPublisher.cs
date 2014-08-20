@@ -68,13 +68,13 @@ namespace Arges.KinectRemote.Transmitter
             _kinectRuntime.CloseSensor();
         }
 
-        void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
+        void OnBodyFrameReady(object sender, KinectItemListEventArgs<KinectBody> e)
         {
-            if (BroadcastEnabled && e != null && e.Bodies != null && 
-                (e.Bodies.Count > 0 || _lastBodyCount != 0))
+            if (BroadcastEnabled && e != null && e.Items != null && 
+                (e.Items.Count > 0 || _lastBodyCount != 0))
             {
-                ProcessAndTransmit(e.SensorId, e.Bodies);
-                _lastBodyCount = e.Bodies.Count;
+                ProcessAndTransmit(e.SensorId, e.Items);
+                _lastBodyCount = e.Items.Count;
             }
         }
 

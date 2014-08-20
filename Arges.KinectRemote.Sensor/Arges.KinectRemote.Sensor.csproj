@@ -55,9 +55,10 @@
   <ItemGroup>
     <Compile Include="AFrameHandler.cs" />
     <Compile Include="KinectBodyFrameHandler.cs" />
+    <Compile Include="AKinectEventArgs.cs" />
     <Compile Include="KinectSensorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BodyFrameReadyEventArgs.cs" />
+    <Compile Include="KinectItemListEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Arges.KinectRemote.Data\Arges.KinectRemote.Data.csproj">
