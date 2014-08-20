@@ -30,7 +30,7 @@ namespace Arges.KinectRemote.Data
     [Serializable, ProtoContract]
     public class KinectBody
     {
-
+        #region Properties
         /// <summary>
         /// Current Body Id
         /// </summary>
@@ -84,7 +84,6 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(8)] 
         public int Priority;
 
-
         /// <summary>
         /// Lean amounts for the body. Left/Right corresponds to the X,
         /// Forward/Back to the Y.
@@ -98,6 +97,12 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(10)]
         public KinectTrackingState LeanTrackingState;
 
+        /// <summary>
+        /// Original Tracking ID for the body from the sensor
+        /// </summary>
+        [ProtoMember(11)]
+        public ulong TrackingId;
+
 
         /// <summary>
         /// Indexes the joints by KinectJointType
@@ -108,6 +113,20 @@ namespace Arges.KinectRemote.Data
         {
             get { return Joints[(int) jointType];  }
             set { Joints[(int) jointType] = value; }
+        }
+        #endregion
+
+
+
+        public KinectBody()
+        {            
+        }
+
+        public KinectBody(string sensorId, ulong trackingId)
+        {
+            // Add an identifier using the sensor ID to keep the body entity unique across all devices.
+            BodyId = string.Format("{0}.{1}", sensorId, trackingId);
+            TrackingId = trackingId;
         }
 
         /// <summary>

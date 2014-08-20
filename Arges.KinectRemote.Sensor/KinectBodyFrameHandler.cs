@@ -82,9 +82,7 @@ namespace Arges.KinectRemote.Sensor
         /// an identifier, and othe processed data</returns>
         private static KinectBody MapBody(Body body, string sensorId)
         {
-            // Add an identifier using the sensor ID to keep the skeleton entity unique across all devices.
-            var d = new KinectBody { BodyId = string.Format("{0}.{1}", sensorId, body.TrackingId) };
-
+            var d = new KinectBody(sensorId, body.TrackingId);
 
             // All six bodies are fully tracked. Wee!
             var jointCount = Enum.GetNames(typeof(KinectJointType)).Length;
