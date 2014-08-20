@@ -54,7 +54,7 @@ namespace Arges.KinectRemote.Transmitter
             Console.WriteLine("Starting all sensors");
 
             var frameHandler = new KinectBodyFrameHandler(_kinectRuntime);
-            frameHandler.BodyFrameReady += OnBodyFrameReady;
+            frameHandler.FrameReady += OnBodyFrameReady;
             _kinectRuntime.AddFrameHandler(frameHandler);
             _kinectRuntime.OpenSensor();
             Console.WriteLine("All Kinect Sensors are started.");

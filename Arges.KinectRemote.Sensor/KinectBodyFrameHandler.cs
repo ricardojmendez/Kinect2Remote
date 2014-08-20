@@ -26,7 +26,7 @@ namespace Arges.KinectRemote.Sensor
         /// <summary>
         /// Handler called whenever one of the sensors has a frame ready.
         /// </summary>
-        public event EventHandler<KinectItemListEventArgs<KinectBody>> BodyFrameReady;
+        public event EventHandler<KinectItemListEventArgs<KinectBody>> FrameReady;
 
         internal override void OnStart()
         {
@@ -48,7 +48,7 @@ namespace Arges.KinectRemote.Sensor
         /// <param name="e">Event arguments</param>
         private void OnFrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
-            if (BodyFrameReady == null)
+            if (FrameReady == null)
             {
                 return;
             }
@@ -67,7 +67,7 @@ namespace Arges.KinectRemote.Sensor
                     .Select(body => MapBody(body, Manager.SensorId))
                     .ToList();
 
-                BodyFrameReady(this, new KinectItemListEventArgs<KinectBody>(Manager.SensorId, resultingBodies));
+                FrameReady(this, new KinectItemListEventArgs<KinectBody>(Manager.SensorId, resultingBodies));
             }
         }
 
