@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KeepLastOnlyConsumer.cs" />
-    <Compile Include="KinectBodyReceiver.cs" />
     <Compile Include="KinectBagReceiver.cs" />
     <Compile Include="MessagePublisherBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

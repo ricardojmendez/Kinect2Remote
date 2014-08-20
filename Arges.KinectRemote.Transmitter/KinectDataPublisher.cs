@@ -96,7 +96,7 @@ namespace Arges.KinectRemote.Transmitter
                 Items = bodies
             };
             
-            _messagePublisher.SerializeAndSendObject(stuffedBodyBag);
+            _messagePublisher.SerializeAndSendObject(stuffedBodyBag, "body");
         }
     }
 }

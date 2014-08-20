@@ -5,9 +5,9 @@
         public string IpAddress { get; private set; }
         public string ConnectionString { get; private set; }
 
-        public abstract void SendRawData(byte[] data);
+        public abstract void SendRawData(byte[] data, string topic);
 
-        public abstract void SerializeAndSendObject<T>(T obj) where T:class;
+        public abstract void SerializeAndSendObject<T>(T obj, string topic) where T:class;
 
         protected MessagePublisherBase(string ipAddress, string connectionString)
         {

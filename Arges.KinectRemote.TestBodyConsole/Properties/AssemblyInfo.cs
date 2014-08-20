@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Arges.KinectRemote.TestConsole")]
+[assembly: AssemblyTitle("Arges.KinectRemote.TestBodyConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Arges.KinectRemote.TestConsole")]
+[assembly: AssemblyProduct("Arges.KinectRemote.TestBodyConsole")]
 [assembly: AssemblyCopyright("Copyright © Numergent Limited 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
