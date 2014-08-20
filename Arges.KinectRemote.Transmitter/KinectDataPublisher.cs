@@ -90,10 +90,10 @@ namespace Arges.KinectRemote.Transmitter
                 processor.ProcessBodies(bodies);
             }
 
-            var stuffedBodyBag = new KinectBodyBag
+            var stuffedBodyBag = new KinectBag<KinectBody>
             {
                 SensorId = sensorId,
-                Bodies = bodies
+                Items = bodies
             };
             
             _messagePublisher.SerializeAndSendObject(stuffedBodyBag);

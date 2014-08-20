@@ -45,7 +45,7 @@ namespace Arges.KinectRemote.TestConsole
             try
             {
 #if OnlyLast
-                using (var receiver = new KinectBodyReceiverLastOnly(_ipAddress, _exchange, _bindingKey))
+                using (var receiver = new KinectBagReceiver<KinectBody>(_ipAddress, _exchange, _bindingKey))
 #else
                 using (var receiver = new KinectBodyReceiver(_ipAddress, _exchange))
 #endif
@@ -78,13 +78,13 @@ namespace Arges.KinectRemote.TestConsole
             }
         }
 
-        static void LogKinectData(KinectBodyBag bundle)
+        static void LogKinectData(KinectBag<KinectBody> bundle)
         {
             Console.WriteLine("{0} Logging data bundle for {1} ", DateTime.UtcNow.ToFileTimeUtc(), bundle.SensorId);
-            if (bundle.Bodies != null)
+            if (bundle.Items != null)
             {
-                Console.WriteLine("Bundle contains {0} bodies", bundle.Bodies.Count);
-                foreach (var body in bundle.Bodies)
+                Console.WriteLine("Bundle contains {0} bodies", bundle.Items.Count);
+                foreach (var body in bundle.Items)
                 {
                     Console.WriteLine("- Body {0}", body);
                     Console.WriteLine("- Hand States. Left {0} (Conf: {1}) Right {2} (Conf: {3})", body.HandLeftState, body.HandLeftConfidence, body.HandRightState, body.HandRightConfidence);

@@ -1,29 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
 {
-    /// <summary>
-    /// Used to collect a list of bodies for sending over the wire
-    /// </summary>
-    [Serializable, ProtoContract]
-    public class KinectBodyBag
-    {
-        /// <summary>
-        /// Unique Kinect Sensor Id
-        /// </summary>
-        [ProtoMember(1)]
-        public string SensorId;
-
-        /// <summary>
-        /// List of tracked skeletons
-        /// </summary>
-        [ProtoMember(2)]
-        public List<KinectBody> Bodies;
-    }
-
     /// <summary>
     /// Encapsulates data for a single body
     /// </summary>
