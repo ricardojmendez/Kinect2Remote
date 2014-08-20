@@ -44,11 +44,7 @@ namespace Arges.KinectRemote.TestConsole
             
             try
             {
-#if OnlyLast
                 using (var receiver = new KinectBagReceiver<KinectBody>(_ipAddress, _exchange, _bindingKey))
-#else
-                using (var receiver = new KinectBodyReceiver(_ipAddress, _exchange))
-#endif
                 {
                     while (true)
                     {

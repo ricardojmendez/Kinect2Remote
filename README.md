@@ -47,8 +47,4 @@ It also includes two test applications:
 Using the Kinect 2 Remote with Unity?  [You'll need a custom RabbitMQ .Net client](https://github.com/ricardojmendez/rabbitmq-dotnet-client) for now.  [See this pull request for details](https://github.com/rabbitmq/rabbitmq-dotnet-client/pull/24).
 
 
-## TODO
-
-* Consider if keeping KinectBodyReceiver and KinectBodyReceiverLastOnly separate or if to integrate them.
-
 (To be expanded)
