@@ -22,11 +22,11 @@ namespace Arges.KinectRemote.Sensor
         /// which sensor the data is coming from
         /// </summary>
         /// <remarks>
-        /// This is likely to be a temporary fix while Microsoft implements 
-        /// a sensor id. If they do not, we can expand it to be a value that
-        /// can be set by the developer.
+        /// This was meant as a temporary fix while Microsoft implements 
+        /// a sensor id, but I have configured it to be user-settable so
+        /// that we can refer to sensors by a human-readable value.
         /// </remarks>
-        public string SensorId { get; private set; }
+        public string SensorId { get; set; }
 
         /// <summary>
         /// Indicates if this sensor manager is running
@@ -39,9 +39,9 @@ namespace Arges.KinectRemote.Sensor
         public KinectSensor Sensor { get; private set; }
 
 
-        public KinectSensorManager()
+        public KinectSensorManager(string sensorId = null)
         {
-            SensorId = Guid.NewGuid().ToString("d");
+            SensorId = sensorId ?? Guid.NewGuid().ToString("d");
         }
 
         /// <summary>
