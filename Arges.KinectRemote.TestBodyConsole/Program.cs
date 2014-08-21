@@ -7,6 +7,11 @@ using Arges.KinectRemote.Transport;
 
 namespace Arges.KinectRemote.TestBodyConsole
 {
+    /// <summary>
+    /// Connects to a RabbitMq server and logs any body messages it receives.
+    /// It will not request gesture messages - see TestGestureControl for
+    /// an example.
+    /// </summary>
     static class Program
     {
         private static string _exchange;

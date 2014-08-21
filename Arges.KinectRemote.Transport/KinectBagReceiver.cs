@@ -7,7 +7,10 @@ using RabbitMQ.Client;
 namespace Arges.KinectRemote.Transport
 {
     /// <summary>
-    /// Handles reception of KinectBodyBags via RabbitMQ. Will process only the last message received.
+    /// Handles reception of KinectBodyBags via RabbitMQ. Will process only the last 
+    /// message received, since we assume that outdated messages are no longer
+    /// important (for instance, we don't particularly care about joint positions
+    /// a frame ago if we happened to skip one).
     /// </summary>
     /// <seealso cref="Arges.KinectRemote.Data.KinectBag{T}"></seealso>
     public class KinectBagReceiver<T> : IDisposable
@@ -18,6 +21,14 @@ namespace Arges.KinectRemote.Transport
 
         public KeepLastOnlyConsumer Consumer { get; private set; }
 
+        /// <summary>
+        /// Initializes a Kinect Bag Receiver
+        /// </summary>
+        /// <param name="ipAddress">IP address of the RabbitMq server</param>
+        /// <param name="exchange">Exchange to connect to</param>
+        /// <param name="bindingKey">Binding key. The current convention is {sensorId}.{topic}, where topic could be body or gesture.</param>
+        /// <param name="username">Username, defaults to guest</param>
+        /// <param name="password">Password, defaults to guest</param>
         public KinectBagReceiver(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
         {
             var factory = new ConnectionFactory { HostName = ipAddress, UserName = username, Password = password };

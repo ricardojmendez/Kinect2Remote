@@ -1,5 +1,8 @@
 ﻿namespace Arges.KinectRemote.Transport
 {
+    /// <summary>
+    /// Abstract message publisher from which we can inherit other transport mechanisms
+    /// </summary>
     public abstract class MessagePublisherBase
     {
         public string IpAddress { get; private set; }

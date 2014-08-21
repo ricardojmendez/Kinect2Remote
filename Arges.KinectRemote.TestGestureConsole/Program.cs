@@ -4,9 +4,12 @@ using System.Configuration;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
 
-
 namespace Arges.KinectRemote.TestGestureConsole
 {
+    /// <summary>
+    /// Logs any gesture messages it receives, while not connecting to any
+    /// other messages such as body updates.
+    /// </summary>
     static class Program
     {
         private static string _exchange;

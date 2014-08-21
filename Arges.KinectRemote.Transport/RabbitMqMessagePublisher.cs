@@ -20,6 +20,14 @@ namespace Arges.KinectRemote.Transport
         readonly IConnection _connection;
         readonly IModel _channel;
 
+        /// <summary>
+        /// Initializes a RabbitMqMessagePublisher
+        /// </summary>
+        /// <param name="ipAddress">IP address of the RabbitMq server</param>
+        /// <param name="exchangeName">Exchange to connect to</param>
+        /// <param name="senderId">Sender identifier to use, normally the Kinect sensor id</param>
+        /// <param name="username">Username, defaults to guest</param>
+        /// <param name="password">Password, defaults to guest</param>
         public RabbitMqMessagePublisher(string ipAddress, string exchangeName, string senderId, string username = "guest", string password = "guest")
             : base(ipAddress, exchangeName)
         {
