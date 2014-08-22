@@ -18,7 +18,7 @@ _Warning: This is based on preliminary software and/or hardware, subject to chan
 
 ## Dependencies
 
-This version of the remote depends on the daily Kinect 2 SDK from 20140806 (K4Wv2Weekly20140806).  For now you will need to manually configure a local NuGet repository with the Microsoft-provided .nupkg.
+This version of the remote depends on the daily Kinect 2 SDK from 20140806 (K4Wv2Weekly20140806) or the [public preview from 20140820](http://www.microsoft.com/en-us/download/details.aspx?id=43661) (although the latter does not seem to include the NuGet packages).  For now you will need to manually configure a local NuGet repository with the Microsoft-provided .nupkg. 
 
 It includes references two Microsoft-provided assemblies, AdaBoostTech.dll and RFRProgessTech.dll, which are included with the SDK. _This means the solution won't build until you have added them_.  These are of course under their own license and I'm not including them until I get a go-ahead from Microsoft.
 
