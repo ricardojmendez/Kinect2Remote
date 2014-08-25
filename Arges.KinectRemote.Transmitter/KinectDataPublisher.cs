@@ -16,7 +16,7 @@ namespace Arges.KinectRemote.Transmitter
     /// the Transport library, but that would require adding a dependency on that
     /// library to Sensor, and I'd rather that remains solely where it's 
     /// necessary (since the receivers do not need to have any dependency to the
-    /// sensor).
+    /// sensor but do need to depend on Transport).
     /// </remarks>
     public class KinectDataPublisher
     {

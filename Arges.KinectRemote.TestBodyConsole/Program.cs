@@ -9,7 +9,7 @@ namespace Arges.KinectRemote.TestBodyConsole
 {
     /// <summary>
     /// Connects to a RabbitMq server and logs any body messages it receives.
-    /// It will not request gesture messages - see TestGestureControl for
+    /// It will not request gesture messages - see TestGestureConsole for
     /// an example.
     /// </summary>
     static class Program
