@@ -26,7 +26,7 @@ namespace Arges.KinectRemote.Transmitter
         /// <summary>
         /// Last number of bodies sent
         /// </summary>
-        private int _lastBodyCount = 0;
+        private int _lastBodyCount;
 
         /// <summary>
         /// Is the publisher currently allowed to broadcast?
@@ -51,13 +51,12 @@ namespace Arges.KinectRemote.Transmitter
         {
             _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
-            Console.WriteLine("Starting all sensors");
-
+            Console.WriteLine("Starting sensor");
             var frameHandler = new KinectBodyFrameHandler(_kinectRuntime);
             frameHandler.FrameReady += OnBodyFrameReady;
             _kinectRuntime.AddFrameHandler(frameHandler);
             _kinectRuntime.OpenSensor();
-            Console.WriteLine("All Kinect Sensors are started.");
+            Console.WriteLine("Sensor started");
 
             BroadcastEnabled = true;
             BodyProcessors = new List<ABodyProcessor>();
