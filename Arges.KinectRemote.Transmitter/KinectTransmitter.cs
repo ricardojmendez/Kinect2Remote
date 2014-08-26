@@ -6,7 +6,7 @@ namespace Arges.KinectRemote.Transmitter
 {
     static class KinectTransmitter
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var exchange = ConfigurationManager.AppSettings["exchange"];
             var ipAddress = ConfigurationManager.AppSettings["ipAddress"];

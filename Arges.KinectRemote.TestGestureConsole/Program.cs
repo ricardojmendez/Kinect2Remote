@@ -40,7 +40,7 @@ namespace Arges.KinectRemote.TestGestureConsole
             Console.WriteLine("Listening for gestures to: {0}", _gestureBindingKey);
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             ReadConfigSettings();
 

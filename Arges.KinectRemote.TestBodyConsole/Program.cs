@@ -42,7 +42,7 @@ namespace Arges.KinectRemote.TestBodyConsole
             Console.WriteLine("Listening for bodies to: {0}", _bodyBindingKey);
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             ReadConfigSettings();
             
