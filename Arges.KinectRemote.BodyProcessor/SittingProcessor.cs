@@ -5,6 +5,10 @@ using Arges.KinectRemote.Data;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
+    /// <summary>
+    /// Sample body processor. This case would right now be much better
+    /// handled by a gesture recognizer.
+    /// </summary>
     public class SittingProcessor: ABodyProcessor
     {
         /// <summary>
