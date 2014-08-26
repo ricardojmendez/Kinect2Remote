@@ -88,7 +88,6 @@ namespace Arges.KinectRemote.Transmitter
             {
                 processor.ProcessBodies(bodies);
             }
-
             var stuffedBodyBag = new KinectBag<KinectBody>
             {
                 SensorId = sensorId,
