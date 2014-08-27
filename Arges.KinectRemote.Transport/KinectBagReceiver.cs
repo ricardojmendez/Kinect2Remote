@@ -7,11 +7,13 @@ using RabbitMQ.Client;
 namespace Arges.KinectRemote.Transport
 {
     /// <summary>
-    /// Handles reception of KinectBodyBags via RabbitMQ. Will process only the last message received.
+    /// Handles reception of KinectBodyBags via RabbitMQ. Will process only the last 
+    /// message received, since we assume that outdated messages are no longer
+    /// important (for instance, we don't particularly care about joint positions
+    /// a frame ago if we happened to skip one).
     /// </summary>
-    /// <seealso cref="Arges.KinectRemote.Data.KinectBodyBag"/>
-    /// <seealso cref="Arges.KinectRemote.Transport.KinectBodyReceiver"/>
-    public class KinectBodyReceiverLastOnly : IDisposable
+    /// <seealso cref="Arges.KinectRemote.Data.KinectBag{T}"></seealso>
+    public class KinectBagReceiver<T> : IDisposable
     {
         readonly IConnection _connection;
         readonly IModel _channel;
@@ -19,7 +21,15 @@ namespace Arges.KinectRemote.Transport
 
         public KeepLastOnlyConsumer Consumer { get; private set; }
 
-        public KinectBodyReceiverLastOnly(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
+        /// <summary>
+        /// Initializes a Kinect Bag Receiver
+        /// </summary>
+        /// <param name="ipAddress">IP address of the RabbitMq server</param>
+        /// <param name="exchange">Exchange to connect to</param>
+        /// <param name="bindingKey">Binding key. The current convention is {sensorId}.{topic}, where topic could be body or gesture.</param>
+        /// <param name="username">Username, defaults to guest</param>
+        /// <param name="password">Password, defaults to guest</param>
+        public KinectBagReceiver(string ipAddress, string exchange, string bindingKey, string username = "guest", string password = "guest")
         {
             var factory = new ConnectionFactory { HostName = ipAddress, UserName = username, Password = password };
             _connection = factory.CreateConnection();
@@ -43,12 +53,12 @@ namespace Arges.KinectRemote.Transport
         }
 
         /// <summary>
-        /// Returns a body bag if the body is ready (/reggie).  WARNING: This is a blocking call.
+        /// Returns a Kinect data bag if one is ready.  WARNING: This is a blocking call.
         /// </summary>
-        /// <returns>KinectBodyBag with the received data.</returns>
-        public KinectBodyBag Dequeue()
+        /// <returns>KinectBag with the received data.</returns>
+        public KinectBag<T> Dequeue()
         {
-            KinectBodyBag data = null;
+            KinectBag<T> data = null;
             while (data == null)
             {
                 var msg = Consumer.Pop();
@@ -56,7 +66,7 @@ namespace Arges.KinectRemote.Transport
                 {
                     using (var ms = new MemoryStream(msg.Body))
                     {
-                        data = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
+                        data = ProtoBuf.Serializer.Deserialize<KinectBag<T>>(ms);
                     }
                 }
                 else
@@ -68,20 +78,18 @@ namespace Arges.KinectRemote.Transport
         }
 
         /// <summary>
-        /// Returns a body bag if the body is ready, or null if otherwise.
+        /// Returns a Kinect bag if one is ready, or null if otherwise.
         /// </summary>
-        /// <returns>KinectBodyBag with the received data, or null.</returns>
-        public KinectBodyBag DequeueNoWait()
+        /// <returns>KinectBag with the received data, or null.</returns>
+        public KinectBag<T> DequeueNoWait()
         {
-            KinectBodyBag data = null;
-
             var msg = Consumer.Pop();
-            if (msg != null && msg.Body != null)
+            if (msg == null || msg.Body == null) return null;
+
+            KinectBag<T> data;
+            using (var ms = new MemoryStream(msg.Body))
             {
-                using (var ms = new MemoryStream(msg.Body))
-                {
-                    data = ProtoBuf.Serializer.Deserialize<KinectBodyBag>(ms);
-                }
+                data = ProtoBuf.Serializer.Deserialize<KinectBag<T>>(ms);
             }
 
             return data;

@@ -7,13 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Sensor",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Data", "Arges.KinectRemote.Data\Arges.KinectRemote.Data.csproj", "{A6328550-5AE7-44DF-932D-E46F7F177FC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.TestConsole", "Arges.KinectRemote.TestConsole\Arges.KinectRemote.TestConsole.csproj", "{B5F99D8F-1B0F-40E3-A45E-CB27D8886233}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.TestBodyConsole", "Arges.KinectRemote.TestBodyConsole\Arges.KinectRemote.TestBodyConsole.csproj", "{B5F99D8F-1B0F-40E3-A45E-CB27D8886233}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transport", "Arges.KinectRemote.Transport\Arges.KinectRemote.Transport.csproj", "{7ADD864F-EFDB-4D34-B39B-29DD5204B7ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.Transmitter", "Arges.KinectRemote.Transmitter\Arges.KinectRemote.Transmitter.csproj", "{8AE51AC2-AAD5-404C-8AEE-2DA5DE6AA7B8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.BodyProcessor", "Arges.KinectRemote.BodyProcessor\Arges.KinectRemote.BodyProcessor.csproj", "{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arges.KinectRemote.TestGestureConsole", "Arges.KinectRemote.TestGestureConsole\Arges.KinectRemote.TestGestureConsole.csproj", "{68CCD171-33E6-4277-8500-AB8341CC6319}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,16 @@ Global
 		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{CAAEBD5D-EB10-4DF1-9C26-418375A7DC62}.Release|x64.ActiveCfg = Release|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{68CCD171-33E6-4277-8500-AB8341CC6319}.Release|x64.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

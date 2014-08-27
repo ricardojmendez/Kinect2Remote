@@ -3,6 +3,9 @@
 *.user
 *.userprefs
 
+# See the Readme file for dependency notes
+vgbtechs/
+
 # Build results
 [Dd]ebug/
 [Rr]elease/

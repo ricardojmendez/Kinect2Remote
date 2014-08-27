@@ -1,77 +1,52 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
 {
-    /// <summary>
-    /// Used to collect a list of bodies for sending over the wire
-    /// </summary>
-    [Serializable, ProtoContract]
-    public class KinectBodyBag
-    {
-        /// <summary>
-        /// Unique Kinect Sensor Id
-        /// </summary>
-        [ProtoMember(1)]
-        public string SensorId;
-
-        /// <summary>
-        /// List of tracked skeletons
-        /// </summary>
-        [ProtoMember(2)]
-        public List<KinectBody> Bodies;
-    }
-
     /// <summary>
     /// Encapsulates data for a single body
     /// </summary>
     [Serializable, ProtoContract]
     public class KinectBody
     {
+        #region Properties
 
         /// <summary>
         /// Current Body Id
         /// </summary>
-        [ProtoMember(1)]
-        public string BodyId;
+        [ProtoMember(1)] public string BodyId;
 
         /// <summary>
         /// Collection of Joints
         /// </summary>
-        [ProtoMember(2)]
-        public KinectJoint[] Joints;
+        [ProtoMember(2)] public KinectJoint[] Joints;
 
         /// <summary>
         /// Indicates if there is any ambiguity in the body
         /// </summary>
-        [ProtoMember(3), ProtoEnum]
-        public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
+        [ProtoMember(3), ProtoEnum] public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
 
         /// <summary>
         /// Left hand state from the list of possible Kinect hand states
         /// </summary>
-        [ProtoMember(4)]
-        public KinectHandState HandLeftState;
+        [ProtoMember(4)] public KinectHandState HandLeftState;
 
         /// <summary>
         /// Right hand state from the list of possible Kinect hand states
         /// </summary>
-        [ProtoMember(5)]
-        public KinectHandState HandRightState;
+        [ProtoMember(5)] public KinectHandState HandRightState;
 
         /// <summary>
         /// Confidence for the left hand state
         /// </summary>
-        [ProtoMember(6)]
-        public float HandLeftConfidence;
+        [ProtoMember(6)] public float HandLeftConfidence;
 
         /// <summary>
         /// Confidence for the right hand state
         /// </summary>
-        [ProtoMember(7)]
-        public float HandRightConfidence;
+        [ProtoMember(7)] public float HandRightConfidence;
 
         /// <summary>
         /// Application-specific body priority
@@ -81,22 +56,33 @@ namespace Arges.KinectRemote.Data
         /// here is a particular user who we want to designate as the main
         /// one. The meaning will be application-specific.
         /// </remarks>
-        [ProtoMember(8)] 
-        public int Priority;
-
+        [ProtoMember(8)] public int Priority;
 
         /// <summary>
         /// Lean amounts for the body. Left/Right corresponds to the X,
         /// Forward/Back to the Y.
         /// </summary>
-        [ProtoMember(9)]
-        public KinectPoint Lean;
+        [ProtoMember(9)] public KinectPoint Lean;
 
         /// <summary>
         /// Lean tracking state.
         /// </summary>
-        [ProtoMember(10)]
-        public KinectTrackingState LeanTrackingState;
+        [ProtoMember(10)] public KinectTrackingState LeanTrackingState;
+
+        /// <summary>
+        /// Original Tracking ID for the body from the sensor
+        /// </summary>
+        [ProtoMember(11)] public ulong TrackingId;
+
+        /// <summary>
+        /// Custom values calculated by a body processor to be sent over the wire
+        /// </summary>
+        /// <remarks>
+        /// We may want to have a body processor calculate some body- or joint-
+        /// related information, to relieve the load from the client site. Use
+        /// this property to send these values.
+        /// </remarks>
+        [ProtoMember(12)] public Dictionary<string, float> CustomData = new Dictionary<string, float>();
 
 
         /// <summary>
@@ -106,8 +92,21 @@ namespace Arges.KinectRemote.Data
         /// <returns>Corresponding KinectJoint</returns>
         public KinectJoint this[KinectJointType jointType]
         {
-            get { return Joints[(int) jointType];  }
+            get { return Joints[(int) jointType]; }
             set { Joints[(int) jointType] = value; }
+        }
+
+        #endregion
+
+        public KinectBody()
+        {
+        }
+
+        public KinectBody(string sensorId, ulong trackingId)
+        {
+            // Add an identifier using the sensor ID to keep the body entity unique across all devices.
+            BodyId = string.Format("{0}.{1}", sensorId, trackingId);
+            TrackingId = trackingId;
         }
 
         /// <summary>
@@ -118,8 +117,11 @@ namespace Arges.KinectRemote.Data
         /// <param name="z">Z offset</param>
         public void ApplyOffset(float x, float y, float z)
         {
-            if (Joints == null) { return; }
-            foreach(var joint in Joints)
+            if (Joints == null)
+            {
+                return;
+            }
+            foreach (var joint in Joints)
             {
                 joint.Position.X += x;
                 joint.Position.Y += y;
@@ -139,7 +141,8 @@ namespace Arges.KinectRemote.Data
         /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
         public bool IsJointInferred(KinectJointType jointType)
         {
-            var joint = Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
+            var joint =
+                Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
             return joint != null;
         }
     }
@@ -154,7 +157,7 @@ namespace Arges.KinectRemote.Data
         Closed = 3,
         Lasso = 4,
     }
-   
+
 
     [ProtoContract]
     public enum KinectJointType

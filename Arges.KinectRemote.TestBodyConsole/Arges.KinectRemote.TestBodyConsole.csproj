@@ -8,8 +8,8 @@
     <ProjectGuid>{B5F99D8F-1B0F-40E3-A45E-CB27D8886233}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Arges.KinectRemote.TestConsole</RootNamespace>
-    <AssemblyName>Arges.KinectRemote.TestConsole</AssemblyName>
+    <RootNamespace>Arges.KinectRemote.TestBodyConsole</RootNamespace>
+    <AssemblyName>Arges.KinectRemote.TestBodyConsole</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

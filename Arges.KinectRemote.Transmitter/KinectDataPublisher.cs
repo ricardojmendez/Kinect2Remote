@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Arges.KinectRemote.BodyProcessor;
 using Arges.KinectRemote.Data;
 using Arges.KinectRemote.Transport;
@@ -17,17 +16,17 @@ namespace Arges.KinectRemote.Transmitter
     /// the Transport library, but that would require adding a dependency on that
     /// library to Sensor, and I'd rather that remains solely where it's 
     /// necessary (since the receivers do not need to have any dependency to the
-    /// sensor).
+    /// sensor but do need to depend on Transport).
     /// </remarks>
     public class KinectDataPublisher
     {
         readonly MessagePublisherBase _messagePublisher;
-        readonly KinectBodyFrameHandler _kinectRuntime = new KinectBodyFrameHandler();
+        readonly KinectSensorManager _kinectRuntime = new KinectSensorManager();
 
         /// <summary>
         /// Last number of bodies sent
         /// </summary>
-        private int _lastBodyCount = 0;
+        private int _lastBodyCount;
 
         /// <summary>
         /// Is the publisher currently allowed to broadcast?
@@ -52,10 +51,12 @@ namespace Arges.KinectRemote.Transmitter
         {
             _messagePublisher = new RabbitMqMessagePublisher(ipAddress, exchangeName, senderId, username, password);
 
-            Console.WriteLine("Starting all sensors");
+            Console.WriteLine("Starting sensor");
+            var frameHandler = new KinectBodyFrameHandler(_kinectRuntime);
+            frameHandler.FrameReady += OnBodyFrameReady;
+            _kinectRuntime.AddFrameHandler(frameHandler);
             _kinectRuntime.OpenSensor();
-            _kinectRuntime.BodyFrameReady += OnBodyFrameReady;
-            Console.WriteLine("All Kinect Sensors are started.");
+            Console.WriteLine("Sensor started");
 
             BroadcastEnabled = true;
             BodyProcessors = new List<ABodyProcessor>();
@@ -66,13 +67,13 @@ namespace Arges.KinectRemote.Transmitter
             _kinectRuntime.CloseSensor();
         }
 
-        void OnBodyFrameReady(object sender, BodyFrameReadyEventArgs e)
+        void OnBodyFrameReady(object sender, KinectItemListEventArgs<KinectBody> e)
         {
-            if (BroadcastEnabled && e != null && e.Bodies != null && 
-                (e.Bodies.Count > 0 || _lastBodyCount != 0))
+            if (BroadcastEnabled && e != null && e.Items != null && 
+                (e.Items.Count > 0 || _lastBodyCount != 0))
             {
-                ProcessAndTransmit(e.SensorId, e.Bodies);
-                _lastBodyCount = e.Bodies.Count;
+                ProcessAndTransmit(e.SensorId, e.Items);
+                _lastBodyCount = e.Items.Count;
             }
         }
 
@@ -87,14 +88,13 @@ namespace Arges.KinectRemote.Transmitter
             {
                 processor.ProcessBodies(bodies);
             }
-
-            var stuffedBodyBag = new KinectBodyBag
+            var stuffedBodyBag = new KinectBag<KinectBody>
             {
                 SensorId = sensorId,
-                Bodies = bodies
+                Items = bodies
             };
             
-            _messagePublisher.SerializeAndSendObject(stuffedBodyBag);
+            _messagePublisher.SerializeAndSendObject(stuffedBodyBag, "body");
         }
     }
 }
