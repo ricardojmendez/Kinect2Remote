@@ -1,12 +1,12 @@
-# Kinect2Remote
----------------
+# Kinect2Remote  0.3
 
 ## Introduction
 
-Kinect2Remote is a .net4 project which connects to the Kinect sensor, handles body messages, packages them and sends over the wire via RabbitMQ to possibly multiple receivers.
+Kinect2Remote is a .Net 4.5 project which connects to the Kinect sensor, handles body messages, packages them and sends over the wire via RabbitMQ to possibly multiple receivers.
 
 This has multiple uses, including:
-* Displacing heavy computation onto a separate computer.  Kinect2 can be GPU intensive, and you may want to free up this GPU power for your rendering, displacing any body data filtering and processing to a dedicated machine.
+* Displacing heavy GPU computation onto a separate computer.  Kinect2 can be GPU intensive, and you may want to free up this GPU power for your rendering, displacing any body data filtering and processing to a dedicated machine.
+* Displacing heavy CPU computation onto a separate computer. The Kinect2Remote includes a framework for writing body processors to precalculate body-related data, which can then be sent along with the body.
 * Using Kinect data on devices where the Kinect SDK is not supported (such as OSX or Linux).
 * Sending Kinect data to an application where you don't have access to .Net 4.5 (such as Unity)
 * Connecting more devices on a single application than the SDK currently allows.
@@ -41,7 +41,7 @@ It also includes three test applications:
 ## General notes
 
 * The producer and consumer need to be configured using the IP address of a RabbitMQ server, as well as an exchange name.
-* The exchange is created as a topic, meaning that all applications connecting to the same exchang will potentially receive the same data BUT can choose which remotes to subscribe to (default is all).
+* The exchange is created as a topic, meaning that all applications connecting to the same exchange will potentially receive the same data BUT can choose which remotes to subscribe to (default is all).
 * The sender id for binding to body data is {remoteName}.body, defaulting to *.body.
 * The sender id for binding to gesture data is {remoteName}.gesture, defaulting to *.body.
 * The producer will send all available body and gesture information for all connected sensors to the same exchange. The sensor ID is encoded on the information sent.
