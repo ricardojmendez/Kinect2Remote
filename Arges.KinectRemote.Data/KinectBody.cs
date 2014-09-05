@@ -75,14 +75,25 @@ namespace Arges.KinectRemote.Data
         [ProtoMember(11)] public ulong TrackingId;
 
         /// <summary>
-        /// Custom values calculated by a body processor to be sent over the wire
+        /// Custom float values calculated by a body processor to be sent over the wire
         /// </summary>
         /// <remarks>
         /// We may want to have a body processor calculate some body- or joint-
         /// related information, to relieve the load from the client site. Use
         /// this property to send these values.
         /// </remarks>
-        [ProtoMember(12)] public Dictionary<string, float> CustomData = new Dictionary<string, float>();
+        [ProtoMember(12)] public Dictionary<string, float> FloatData = new Dictionary<string, float>();
+
+        /// <summary>
+        /// Custom Vector3 values calculated by a body processor to be sent over the wire
+        /// </summary>
+        /// <remarks>
+        /// We may want to have a body processor calculate some body- or joint-
+        /// related information, to relieve the load from the client site. Use
+        /// this property to send these values if they're vectors.
+        /// </remarks>
+        [ProtoMember(13)]
+        public Dictionary<string, KinectVector3> Vector3Data = new Dictionary<string, KinectVector3>();
 
 
         /// <summary>

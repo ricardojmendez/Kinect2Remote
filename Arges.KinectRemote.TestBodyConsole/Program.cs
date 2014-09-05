@@ -89,10 +89,10 @@ namespace Arges.KinectRemote.TestBodyConsole
                 {
                     Console.WriteLine("- Body {0}", body);
                     Console.WriteLine("- Hand States. Left {0} (Conf: {1}) Right {2} (Conf: {3})", body.HandLeftState, body.HandLeftConfidence, body.HandRightState, body.HandRightConfidence);
-                    if (body.CustomData.Keys.Count > 0)
+                    if (body.FloatData.Keys.Count > 0)
                     {
                         Console.WriteLine("- Custom Data");
-                        foreach (var kv in body.CustomData)
+                        foreach (var kv in body.FloatData)
                         {
                             Console.WriteLine("-- {0}: {1}", kv.Key, kv.Value);
                         }
