@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Kinect2Remote is a .Net 4.5 project which connects to the Kinect sensor, handles body messages, packages them and sends over the wire via RabbitMQ to possibly multiple receivers.
+Kinect2Remote is a .Net 4.5 project which connects to the new Kinect for Windows sensor, handles body and gesture messages, packages them and sends over the wire via to a RabbitMQ server, where they can be queried by an arbitrary number of receivers.
 
 This has multiple uses, including:
 * Displacing heavy GPU computation onto a separate computer.  Kinect2 can be GPU intensive, and you may want to free up this GPU power for your rendering, displacing any body data filtering and processing to a dedicated machine.
-* Displacing heavy CPU computation onto a separate computer. The Kinect2Remote includes a framework for writing body processors to precalculate body-related data, which can then be sent along with the body.
+* Displacing heavy CPU computation onto a separate computer. The Kinect2Remote includes a framework for writing body processors to pre-calculate body-related data, which can then be sent along with the body.
 * Using Kinect data on devices where the Kinect SDK is not supported (such as OSX or Linux).
 * Sending Kinect data to an application where you don't have access to .Net 4.5 (such as Unity)
 * Connecting more devices on a single application than the SDK currently allows.
@@ -43,7 +43,7 @@ It also includes three test applications:
 * The producer and consumer need to be configured using the IP address of a RabbitMQ server, as well as an exchange name.
 * The exchange is created as a topic, meaning that all applications connecting to the same exchange will potentially receive the same data BUT can choose which remotes to subscribe to (default is all).
 * The sender id for binding to body data is {remoteName}.body, defaulting to *.body.
-* The sender id for binding to gesture data is {remoteName}.gesture, defaulting to *.body.
+* The sender id for binding to gesture data is {remoteName}.gesture, defaulting to *.gesture.
 * The producer will send all available body and gesture information for all connected sensors to the same exchange. The sensor ID is encoded on the information sent.
 * The current Dequeue method is a blocking call.  Do not use it from an Update method on a Unity application, use DequeueNoWait instead.
 * Messages on the consumer queues have a TTL of 30ms, since we don't really care about outdated frames. We could expose this as a parameter, but I'm not complicating things right now.
@@ -52,7 +52,16 @@ It also includes three test applications:
 
 ## Kinect2Remote and Unity
 
-Using the Kinect 2 Remote with Unity?  [You'll need a custom RabbitMQ .Net client](https://github.com/ricardojmendez/rabbitmq-dotnet-client) for now.  [See this pull request for details](https://github.com/rabbitmq/rabbitmq-dotnet-client/pull/24).
+Using the Kinect 2 Remote with Unity?  [You'll need to build a custom RabbitMQ .Net client](https://github.com/ricardojmendez/rabbitmq-dotnet-client) for now, since there are two issues with Unity:
 
+* The Mono version Unity 4.5 includes will throw a SocketException on IPv6-enabled operating systems when attempting to connect to a IPv4 address.  [See this pull request for details](https://github.com/rabbitmq/rabbitmq-dotnet-client/pull/24).
+* Unity 4.6b17 crashes on my tests when attempting to use either of the final RabbitMQ .Net 3.3.5 clients - neither .Net 3.0 nor 2.0 work.
+
+
+## Future extensions
+
+Some possible extensions I’m considering are:
+
+* Being able to receive commands to turn on/off some features (such as the data that is being pre-calculated and sent over the wire).
 
 (To be expanded)
