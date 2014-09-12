@@ -210,8 +210,6 @@ namespace Arges.KinectRemote.Data
         Obscured = 1 << 0,
         Sitting = 1 << 1,
         MissingLeftArm = 1 << 2,
-        MissingRightArm = 1 << 3,
-        ShadowOutOfRange = 1 << 4,
-        ShadowLost = 1 << 5
+        MissingRightArm = 1 << 3
     }
 }
