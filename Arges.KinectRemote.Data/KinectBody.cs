@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
@@ -149,12 +148,10 @@ namespace Arges.KinectRemote.Data
         /// Evaluates if a joint in the body is inferred
         /// </summary>
         /// <param name="jointType">Joint type to look for</param>
-        /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
+        /// <returns>Returns true if the joint is inferred or null, false if it is not or it isn't found</returns>
         public bool IsJointInferred(KinectJointType jointType)
         {
-            var joint =
-                Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
-            return joint != null;
+            return this[jointType] == null || this[jointType].TrackingState == KinectTrackingState.Inferred;
         }
     }
 
