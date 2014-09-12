@@ -16,7 +16,7 @@ namespace Arges.KinectRemote.Data
         /// <summary>
         /// Current Body Id
         /// </summary>
-        [ProtoMember(1)] public string BodyId;
+        [ProtoMember(1)] public readonly string BodyId;
 
         /// <summary>
         /// Collection of Joints
@@ -72,7 +72,7 @@ namespace Arges.KinectRemote.Data
         /// <summary>
         /// Original Tracking ID for the body from the sensor
         /// </summary>
-        [ProtoMember(11)] public ulong TrackingId;
+        [ProtoMember(11)] public readonly ulong TrackingId;
 
         /// <summary>
         /// Custom float values calculated by a body processor to be sent over the wire
