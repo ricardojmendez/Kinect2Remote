@@ -11,7 +11,7 @@ namespace Arges.KinectRemote.Sensor
     /// 
     /// Based on Microsoft's Gesture Builder example
     /// </summary>
-    public class KinectGestureFrameHandler: AFrameHandler
+    public class KinectGestureFrameHandler : AFrameHandler
     {
         private VisualGestureBuilderFrameSource _frameSource;
         private VisualGestureBuilderFrameReader _frameReader;
@@ -22,7 +22,6 @@ namespace Arges.KinectRemote.Sensor
         /// Handler called whenever we have a new gesture frame ready
         /// </summary>
         public event EventHandler<KinectItemListEventArgs<KinectGesture>> FrameReady;
-
 
 
         /// <summary>
@@ -39,11 +38,9 @@ namespace Arges.KinectRemote.Sensor
         /// </summary>
         public ulong TrackingId
         {
-            get { return _frameSource.TrackingId;  }
+            get { return _frameSource.TrackingId; }
             set { _frameSource.TrackingId = value; }
         }
-
-
 
 
         public KinectGestureFrameHandler(KinectSensorManager manager, string databasePath) : base(manager)
@@ -51,25 +48,39 @@ namespace Arges.KinectRemote.Sensor
             DatabasePath = databasePath;
         }
 
-        void FrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
+        private void FrameArrived(object sender, VisualGestureBuilderFrameArrivedEventArgs e)
         {
             var list = new List<KinectGesture>();
 
             using (var frame = e.FrameReference.AcquireFrame())
             {
                 if (frame == null) return;
-                list.AddRange(from result in frame.DiscreteGestureResults 
-                              let gesture = result.Key 
-                              let gestureResult = result.Value 
-                              where gestureResult.Detected 
-                              select new KinectGesture {Name = gesture.Name, TrackingId = TrackingId, IsContinuous = false, Value = gestureResult.Confidence}
-                              );
+                list.AddRange(from result in frame.DiscreteGestureResults
+                    let gesture = result.Key
+                    let gestureResult = result.Value
+                    where gestureResult.Detected
+                    select
+                        new KinectGesture
+                        {
+                            Name = gesture.Name,
+                            TrackingId = TrackingId,
+                            IsContinuous = false,
+                            Value = gestureResult.Confidence
+                        }
+                    );
                 list.AddRange(from result in frame.ContinuousGestureResults
-                              let gesture = result.Key
-                              let gestureResult = result.Value
-                              where gestureResult.Progress > 0
-                              select new KinectGesture { Name = gesture.Name, TrackingId = TrackingId, IsContinuous = true, Value = gestureResult.Progress }
-                              );
+                    let gesture = result.Key
+                    let gestureResult = result.Value
+                    where gestureResult.Progress > 0
+                    select
+                        new KinectGesture
+                        {
+                            Name = gesture.Name,
+                            TrackingId = TrackingId,
+                            IsContinuous = true,
+                            Value = gestureResult.Progress
+                        }
+                    );
             }
 
             FrameReady(this, new KinectItemListEventArgs<KinectGesture>(Manager.SensorId, list));
@@ -96,7 +107,6 @@ namespace Arges.KinectRemote.Sensor
                     _frameSource.AddGesture(gesture);
                 }
             }
-
         }
 
         internal override void OnStop()

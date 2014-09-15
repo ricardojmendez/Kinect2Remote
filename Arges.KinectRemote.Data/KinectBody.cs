@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
@@ -16,7 +15,7 @@ namespace Arges.KinectRemote.Data
         /// <summary>
         /// Current Body Id
         /// </summary>
-        [ProtoMember(1)] public string BodyId;
+        [ProtoMember(1)] public readonly string BodyId;
 
         /// <summary>
         /// Collection of Joints
@@ -72,17 +71,28 @@ namespace Arges.KinectRemote.Data
         /// <summary>
         /// Original Tracking ID for the body from the sensor
         /// </summary>
-        [ProtoMember(11)] public ulong TrackingId;
+        [ProtoMember(11)] public readonly ulong TrackingId;
 
         /// <summary>
-        /// Custom values calculated by a body processor to be sent over the wire
+        /// Custom float values calculated by a body processor to be sent over the wire
         /// </summary>
         /// <remarks>
         /// We may want to have a body processor calculate some body- or joint-
         /// related information, to relieve the load from the client site. Use
         /// this property to send these values.
         /// </remarks>
-        [ProtoMember(12)] public Dictionary<string, float> CustomData = new Dictionary<string, float>();
+        [ProtoMember(12)] public Dictionary<string, float> FloatData = new Dictionary<string, float>();
+
+        /// <summary>
+        /// Custom Vector3 values calculated by a body processor to be sent over the wire
+        /// </summary>
+        /// <remarks>
+        /// We may want to have a body processor calculate some body- or joint-
+        /// related information, to relieve the load from the client site. Use
+        /// this property to send these values if they're vectors.
+        /// </remarks>
+        [ProtoMember(13)]
+        public Dictionary<string, KinectVector3> Vector3Data = new Dictionary<string, KinectVector3>();
 
 
         /// <summary>
@@ -138,12 +148,10 @@ namespace Arges.KinectRemote.Data
         /// Evaluates if a joint in the body is inferred
         /// </summary>
         /// <param name="jointType">Joint type to look for</param>
-        /// <returns>Returns true if the joint is inferred, false if it is not or it isn't found</returns>
+        /// <returns>Returns true if the joint is inferred or null, false if it is not or it isn't found</returns>
         public bool IsJointInferred(KinectJointType jointType)
         {
-            var joint =
-                Joints.FirstOrDefault(x => x.JointType == jointType && x.TrackingState == KinectTrackingState.Inferred);
-            return joint != null;
+            return this[jointType] == null || this[jointType].TrackingState == KinectTrackingState.Inferred;
         }
     }
 
@@ -199,8 +207,6 @@ namespace Arges.KinectRemote.Data
         Obscured = 1 << 0,
         Sitting = 1 << 1,
         MissingLeftArm = 1 << 2,
-        MissingRightArm = 1 << 3,
-        ShadowOutOfRange = 1 << 4,
-        ShadowLost = 1 << 5
+        MissingRightArm = 1 << 3
     }
 }

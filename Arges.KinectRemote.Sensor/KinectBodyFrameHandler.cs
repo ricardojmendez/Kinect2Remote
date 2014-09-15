@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.Kinect;
 using Arges.KinectRemote.Data;
+using Microsoft.Kinect;
 
 namespace Arges.KinectRemote.Sensor
 {
     /// <summary>
     /// Defines a simple runtime class that acts as a wrapper for the KinectSDK body interface
     /// </summary>
-    public class KinectBodyFrameHandler: AFrameHandler
+    public class KinectBodyFrameHandler : AFrameHandler
     {
-
         /// <summary>
         /// Body frame reader
         /// </summary>
@@ -18,7 +17,7 @@ namespace Arges.KinectRemote.Sensor
 
         public Body[] Bodies { get; private set; }
 
-        public KinectBodyFrameHandler(KinectSensorManager manager): base(manager)
+        public KinectBodyFrameHandler(KinectSensorManager manager) : base(manager)
         {
             Bodies = new Body[6];
         }
@@ -85,7 +84,7 @@ namespace Arges.KinectRemote.Sensor
             var d = new KinectBody(sensorId, body.TrackingId);
 
             // All six bodies are fully tracked. Wee!
-            var jointCount = Enum.GetNames(typeof(KinectJointType)).Length;
+            var jointCount = Enum.GetNames(typeof (KinectJointType)).Length;
             d.Joints = new KinectJoint[jointCount];
 
             for (var i = 0; i < jointCount; i++)
@@ -95,14 +94,14 @@ namespace Arges.KinectRemote.Sensor
 
                 var joint = new KinectJoint
                 {
-                    TrackingState = ((KinectTrackingState)(int)nativeJoint.TrackingState),
+                    TrackingState = ((KinectTrackingState) (int) nativeJoint.TrackingState),
                     Position = new KinectVector3
                     {
-                        X = nativeJoint.Position.X, 
-                        Y = nativeJoint.Position.Y, 
+                        X = nativeJoint.Position.X,
+                        Y = nativeJoint.Position.Y,
                         Z = nativeJoint.Position.Z
                     },
-                    JointType = ((KinectJointType)(int)nativeJoint.JointType),
+                    JointType = ((KinectJointType) (int) nativeJoint.JointType),
                     Orientation = new KinectVector4
                     {
                         W = orientation.W,
@@ -113,17 +112,17 @@ namespace Arges.KinectRemote.Sensor
                 };
                 d.Joints[i] = joint;
             }
-            d.Lean = new KinectPoint { X = body.Lean.X, Y = body.Lean.Y };
+            d.Lean = new KinectPoint {X = body.Lean.X, Y = body.Lean.Y};
             d.LeanTrackingState = (KinectTrackingState) (int) body.LeanTrackingState;
 
             // Record hand states
-            d.HandLeftState = (KinectHandState)(int)body.HandLeftState;
-            d.HandRightState = (KinectHandState)(int)body.HandRightState;
-            
+            d.HandLeftState = (KinectHandState) (int) body.HandLeftState;
+            d.HandRightState = (KinectHandState) (int) body.HandRightState;
+
             // Record hand confidence.  Initially we'll just convert the enum to an int,
             // but we could do some exponential smoothing between their {0,1} values.
-            d.HandLeftConfidence = (int)body.HandLeftConfidence;
-            d.HandRightConfidence = (int)body.HandRightConfidence;
+            d.HandLeftConfidence = (int) body.HandLeftConfidence;
+            d.HandRightConfidence = (int) body.HandRightConfidence;
 
             return d;
         }
