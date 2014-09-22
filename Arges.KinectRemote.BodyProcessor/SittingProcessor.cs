@@ -36,7 +36,7 @@ namespace Arges.KinectRemote.BodyProcessor
         /// </summary>
         /// <param name="body">Body to evaluate</param>
         /// <returns>True if the body is sitting, false if otherwise</returns>
-        public override bool ProcessBody(KinectBody body)
+        protected override bool ProcessBody(KinectBody body)
         {
             var leftHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipLeft);
             var rightHip = body.Joints.FirstOrDefault(j => j.JointType == KinectJointType.HipRight);
