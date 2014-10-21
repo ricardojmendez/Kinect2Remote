@@ -153,6 +153,25 @@ namespace Arges.KinectRemote.Data
         {
             return this[jointType] == null || this[jointType].TrackingState == KinectTrackingState.Inferred;
         }
+
+        /// <summary>
+        /// Resets the data values on the custom body data
+        /// </summary>
+        /// <remarks>
+        /// Notice that we don't just clear the list, since a receiver may be
+        /// expecting to receive them, but instead reset them to the baseline.
+        /// </remarks>
+        public void ResetData()
+        {
+            foreach (var k in Vector3Data.Keys)
+            {
+                Vector3Data[k] = KinectVector3.Zero;
+            }
+            foreach (var k in FloatData.Keys)
+            {
+                FloatData[k] = 0;
+            }
+        }
     }
 
 
