@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Arges.KinectRemote.BodyProcessor
 {
-    public abstract class ABodyProcessor: IBodyProcessor
+    public abstract class ABodyProcessor
     {
         /// <summary>
         /// Processes a body
         /// </summary>
         /// <param name="body">Body to process</param>
         /// <returns>Returns true if the body was altered</returns>
-        public abstract bool ProcessBody(Data.KinectBody body);
+        protected abstract bool ProcessBody(Data.KinectBody body);
 
         /// <summary>
         /// Processes a list of bodies

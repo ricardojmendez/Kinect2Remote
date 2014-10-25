@@ -11,6 +11,8 @@ namespace Arges.KinectRemote.Data
     [Serializable, ProtoContract]
     public struct KinectVector3
     {
+        public static readonly KinectVector3 Zero = new KinectVector3(0, 0, 0);
+
         [ProtoMember(1)] public float X;
         [ProtoMember(2)] public float Y;
         [ProtoMember(3)] public float Z;
