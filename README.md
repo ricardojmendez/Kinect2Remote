@@ -1,4 +1,4 @@
-# Kinect2Remote  0.4
+# Kinect 2 Remote  1.0
 
 ## Introduction
 
@@ -12,13 +12,11 @@ It was built initially to centralize data from multiple Kinect sensors into a si
 * Since the client libraries are .Net 3.5, it can be used for sending Kinect data to an application where you don't have access to .Net 4.5.
 * Connecting more devices on a single application than the SDK currently allows.
 
-_Warning: This is based on preliminary software and/or hardware, subject to change._
-
 ## Dependencies
 
-This version of the remote depends on the daily Kinect 2 SDK from 20140806 (K4Wv2Weekly20140806) or the [public preview from 20140820](http://www.microsoft.com/en-us/download/details.aspx?id=43661) (although the latter does not seem to include the NuGet packages).  For now you will need to manually configure a local NuGet repository with the Microsoft-provided .nupkg. 
+This version of the remote has been tested against the [final release of the Kinect 2 SDK](http://go.microsoft.com/fwlink/?LinkId=403899).  You will need to get the Kinect and Kinect Gesture Builder packages from NuGet. 
 
-It includes references two Microsoft-provided assemblies, AdaBoostTech.dll and RFRProgessTech.dll, which are included with the SDK. _This means the solution won't build until you have added them_.  These are of course under their own license and I'm not including them until I get a go-ahead from Microsoft.
+It includes references two Microsoft-provided assemblies, AdaBoostTech.dll and RFRProgessTech.dll, which are included with the SDK. _This means the solution won't build until you have added them_, which will likely happen when you get the gesture builder DLLs from NuGet.
 
 You'll need a [RabbitMQ server](http://rabbitmq.com).
 
