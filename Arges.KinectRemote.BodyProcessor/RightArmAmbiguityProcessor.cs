@@ -19,7 +19,7 @@ namespace Arges.KinectRemote.BodyProcessor
             var isMissing = inferredCount >= 4;
             if (isMissing)
             {
-                body.Ambiguity |= BodyAmbiguity.MissingRightArm;
+                body.Tags.Add("RightArmMissing");
             }
             return isMissing;
         }
