@@ -161,15 +161,16 @@ namespace Arges.KinectRemote.Data
         /// </summary>
         /// <remarks>
         /// Notice that we don't just clear the list, since a receiver may be
-        /// expecting to receive them, but instead reset them to the baseline.
+        /// expecting to receive them, but instead reset them to the baseline,
+        /// since some receivers may expect to always get at least the default.
         /// </remarks>
         public void ResetData()
         {
-            foreach (var k in Vector3Data.Keys)
+            foreach (var k in Vector3Data.Keys.ToList())
             {
                 Vector3Data[k] = KinectVector3.Zero;
             }
-            foreach (var k in FloatData.Keys)
+            foreach (var k in FloatData.Keys.ToList())
             {
                 FloatData[k] = 0;
             }
