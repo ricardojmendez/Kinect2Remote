@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Kinect;
-using RabbitMQ.Client.Impl;
 
 namespace Arges.KinectRemote.Sensor
 {
@@ -14,7 +10,6 @@ namespace Arges.KinectRemote.Sensor
     /// </summary>
     public class KinectSensorManager
     {
-
         private List<AFrameHandler> _frameHandlers = new List<AFrameHandler>();
 
         /// <summary>
@@ -72,7 +67,7 @@ namespace Arges.KinectRemote.Sensor
             {
                 Console.WriteLine("Closing sensor");
                 Sensor.Close();
-                Console.WriteLine("Closed sensor");                
+                Console.WriteLine("Closed sensor");
             }
             IsRunning = false;
         }
