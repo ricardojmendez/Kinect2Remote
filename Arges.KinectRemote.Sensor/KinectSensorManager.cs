@@ -67,9 +67,13 @@ namespace Arges.KinectRemote.Sensor
                 handler.OnStop();
             }
 
-            Console.WriteLine("Closing sensor");
-            Sensor.Close();
-            Console.WriteLine("Closed sensor");
+            // Sensor might be null if Open hasn't been called
+            if (Sensor != null)
+            {
+                Console.WriteLine("Closing sensor");
+                Sensor.Close();
+                Console.WriteLine("Closed sensor");                
+            }
             IsRunning = false;
         }
 
