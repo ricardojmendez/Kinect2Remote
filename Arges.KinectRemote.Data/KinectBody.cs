@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using ProtoBuf;
 
 namespace Arges.KinectRemote.Data
@@ -21,11 +23,6 @@ namespace Arges.KinectRemote.Data
         /// Collection of Joints
         /// </summary>
         [ProtoMember(2)] public KinectJoint[] Joints;
-
-        /// <summary>
-        /// Indicates if there is any ambiguity in the body
-        /// </summary>
-        [ProtoMember(3), ProtoEnum] public BodyAmbiguity Ambiguity = BodyAmbiguity.Clear;
 
         /// <summary>
         /// Left hand state from the list of possible Kinect hand states
@@ -91,8 +88,13 @@ namespace Arges.KinectRemote.Data
         /// related information, to relieve the load from the client site. Use
         /// this property to send these values if they're vectors.
         /// </remarks>
-        [ProtoMember(13)]
-        public Dictionary<string, KinectVector3> Vector3Data = new Dictionary<string, KinectVector3>();
+        [ProtoMember(13)] public Dictionary<string, KinectVector3> Vector3Data = new Dictionary<string, KinectVector3>();
+
+        /// <summary>
+        /// List of tas related to this body
+        /// </summary>
+        /// <remarks>Will hold an arbitrary set of body tags, for instance "Cached" or "Sitting" </remarks>
+        [ProtoMember(14)] public HashSet<string> Tags = new HashSet<string>();
 
 
         /// <summary>
@@ -141,7 +143,7 @@ namespace Arges.KinectRemote.Data
 
         public override string ToString()
         {
-            return string.Format("Id: {0} Ambiguity: {1:F}", BodyId, Ambiguity);
+            return string.Format("Id: {0} Tags: {1}", BodyId, string.Join(", ", Tags.ToArray()));
         }
 
         /// <summary>
@@ -159,18 +161,20 @@ namespace Arges.KinectRemote.Data
         /// </summary>
         /// <remarks>
         /// Notice that we don't just clear the list, since a receiver may be
-        /// expecting to receive them, but instead reset them to the baseline.
+        /// expecting to receive them, but instead reset them to the baseline,
+        /// since some receivers may expect to always get at least the default.
         /// </remarks>
         public void ResetData()
         {
-            foreach (var k in Vector3Data.Keys)
+            foreach (var k in Vector3Data.Keys.ToList())
             {
                 Vector3Data[k] = KinectVector3.Zero;
             }
-            foreach (var k in FloatData.Keys)
+            foreach (var k in FloatData.Keys.ToList())
             {
                 FloatData[k] = 0;
             }
+            Tags.Clear();
         }
     }
 
@@ -214,18 +218,5 @@ namespace Arges.KinectRemote.Data
         ThumbLeft = 22,
         HandTipRight = 23,
         ThumbRight = 24
-    }
-
-    /// <summary>
-    /// Body ambiguity flag.
-    /// </summary>
-    [ProtoContract, Flags]
-    public enum BodyAmbiguity
-    {
-        Clear = 0,
-        Obscured = 1 << 0,
-        Sitting = 1 << 1,
-        MissingLeftArm = 1 << 2,
-        MissingRightArm = 1 << 3
     }
 }

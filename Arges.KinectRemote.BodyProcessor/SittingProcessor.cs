@@ -62,7 +62,7 @@ namespace Arges.KinectRemote.BodyProcessor
 
             if (isSitting)
             {
-                body.Ambiguity |= BodyAmbiguity.Sitting;
+                body.Tags.Add("Sitting");
             }
 
 #if LOG_SITTING
