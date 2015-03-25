@@ -1,4 +1,4 @@
-# Kinect 2 Remote  1.0
+# Kinect 2 Remote  1.1
 
 ## Introduction
 
@@ -53,6 +53,10 @@ Using the Kinect 2 Remote with Unity?  [You'll need to build a custom RabbitMQ .
 
 * The Mono version Unity 4.5 includes will throw a SocketException on IPv6-enabled operating systems when attempting to connect to a IPv4 address.  [See this pull request for details](https://github.com/rabbitmq/rabbitmq-dotnet-client/pull/24).
 * Unity 4.6b17 crashes on my tests when attempting to use either of the final RabbitMQ .Net 3.3.5 clients - neither .Net 3.0 nor 2.0 work.
+
+## Changelog
+
+* v1.1 removes BodyFlags, use the Tags collection.
 
 
 ## Future extensions
